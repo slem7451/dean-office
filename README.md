@@ -14,6 +14,7 @@
 4. php yii migrate
 ## Полезные ссылки ##
 - https://www.yiiframework.com/doc/guide/2.0/ru
-- https://metanit.com/php/tutorial/
-- https://getbootstrap.com/ (на русском: https://bootstrap5.ru/)
+- https://metanit.com/php/tutorial
+- https://getbootstrap.com (на русском: https://bootstrap5.ru)
 - https://smartiqa.ru/courses/git
+- https://www.php.net

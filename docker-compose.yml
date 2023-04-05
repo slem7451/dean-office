@@ -7,25 +7,24 @@ services:
     ports:
       - 20080:80
     volumes:
-      # Re-use local composer cache via host-volume
       - ~/.composer-docker/cache:/root/.composer/cache:delegated
-      # Mount source-code for development
       - ./:/app
+      - ./php.ini:/usr/local/etc/php/conf.d/custom.ini
 
   backend:
     build: backend
     ports:
       - 21080:80
     volumes:
-      # Re-use local composer cache via host-volume
       - ~/.composer-docker/cache:/root/.composer/cache:delegated
-      # Mount source-code for development
       - ./:/app
+      - ./php.ini:/usr/local/etc/php/conf.d/custom.ini
 
-  mysql:
-    image: mysql
+  postgres:
+    image: postgres
     ports:
-      - 3306:3306
+      - "5432:5432"
     environment:
-      - MYSQL_ROOT_PASSWORD=root
-      - MYSQL_DATABASE=dean
+      POSTGRES_PASSWORD: "root"
+      POSTGRES_DB: "dean"
+      POSTGRES_USER: "root"
