@@ -38,6 +38,7 @@ class GroupController extends Controller
                 'pageSize' => 10,
             ],
         ]);
+
         if ($model->load(Yii::$app->request->post()) && Yii::$app->request->isAjax) {
             if ($model->validate()) {
                 $model->saveGroup();

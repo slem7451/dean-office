@@ -2,8 +2,6 @@
 
 namespace frontend\controllers;
 
-use yii\filters\AccessControl;
-use yii\filters\VerbFilter;
 use yii\web\Controller;
 
 class StudentController extends Controller

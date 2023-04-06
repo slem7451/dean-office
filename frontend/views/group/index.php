@@ -14,7 +14,7 @@ $this->title = 'Группы';
 
     <div class="group-container">
         <?php
-        $form = ActiveForm::begin(['id' => 'group-form', 'enableClientValidation' => true,]);
+        $form = ActiveForm::begin(['id' => 'group-form']);
         Modal::begin([
             'id' => 'group-modal',
             'toggleButton' => ['label' => 'Создать группу', 'class' => 'btn btn-primary mg-bottom-15px'],
