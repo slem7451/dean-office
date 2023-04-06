@@ -17,9 +17,9 @@ class GroupForm extends Model
             ['name', 'string'],
             ['name', 'trim'],
 
-            ['created_at', 'required'],
+            ['created_at', 'required', 'message' => 'Обязательно для заполнения'],
 
-            ['closed_at', 'required']
+            ['closed_at', 'required', 'message' => 'Обязательно для заполнения']
         ];
     }
 

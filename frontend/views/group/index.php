@@ -7,17 +7,17 @@ use kartik\date\DatePicker;
 use yii\bootstrap5\Modal;
 use yii\grid\GridView;
 use yii\helpers\Html;
-use yii\widgets\ActiveForm;
+use yii\bootstrap5\ActiveForm;
 
 $this->title = 'Группы';
 ?>
 
     <div class="group-container">
         <?php
-        $form = ActiveForm::begin(['id' => 'group-form']);
+        $form = ActiveForm::begin(['id' => 'group-form', 'enableClientValidation' => true,]);
         Modal::begin([
             'id' => 'group-modal',
-            'toggleButton' => ['label' => 'Создать группу', 'class' => 'btn btn-primary'],
+            'toggleButton' => ['label' => 'Создать группу', 'class' => 'btn btn-primary mg-bottom-15px'],
             'title' => 'Создание группы',
             'footer' => Html::submitButton('Создать', ['class' => 'btn btn-success save-group-btn']) . Html::button('Закрыть', [
                     'class' => 'btn btn-danger',
@@ -57,7 +57,7 @@ $this->title = 'Группы';
         ActiveForm::end();
         echo GridView::widget([
             'dataProvider' => $dataProvider,
-            'layout'=>"{items}\n{pager}",
+            'layout' => "{items}\n{pager}",
             'columns' => [
                 [
                     'header' => 'Название группы',
