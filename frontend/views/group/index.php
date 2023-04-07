@@ -8,6 +8,7 @@ use yii\bootstrap5\Modal;
 use yii\grid\GridView;
 use yii\helpers\Html;
 use yii\bootstrap5\ActiveForm;
+use yii\widgets\Pjax;
 
 $this->title = 'Группы';
 ?>
@@ -55,6 +56,7 @@ $this->title = 'Группы';
         <?php
         Modal::end();
         ActiveForm::end();
+        Pjax::begin(['id' => 'group-table-pjax']);
         echo GridView::widget([
             'dataProvider' => $dataProvider,
             'layout' => "{items}\n{pager}",
@@ -78,7 +80,8 @@ $this->title = 'Группы';
                     }
                 ]
             ]
-        ])
+        ]);
+        Pjax::end();
         ?>
     </div>
 
@@ -98,6 +101,7 @@ $this->registerJS(<<<JS
             type: 'POST',
             data: data,
             success: function(res) {
+                $.pjax.reload({container: '#group-table-pjax', replace: false});
                 $('#group-modal').modal('hide');
             }
         });

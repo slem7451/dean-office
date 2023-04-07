@@ -16,8 +16,8 @@ class m230406_110122_create_student_to_group_table extends Migration
         $this->createTable('{{%student_to_group}}', [
             'student_id' => $this->integer()->notNull(),
             'group_id' => $this->integer()->notNull(),
-            'created_at' => $this->date()->defaultValue(new Expression('NOW()')),
-            'closed_at' => $this->date()->defaultValue(new Expression("DATE('3000-01-01')")),
+            'created_at' => $this->timestamp()->defaultValue(new Expression('NOW()')),
+            'closed_at' => $this->timestamp()->defaultValue(new Expression("DATE('3000-01-01 00:00:00')")),
         ]);
         $this->addForeignKey(
             'student_to_group_to_student_fk',

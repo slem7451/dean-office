@@ -18,8 +18,10 @@ class GroupForm extends Model
             ['name', 'trim'],
 
             ['created_at', 'required', 'message' => 'Обязательно для заполнения'],
+            ['created_at', 'date', 'format' => 'php:Y-m-d'],
 
-            ['closed_at', 'required', 'message' => 'Обязательно для заполнения']
+            ['closed_at', 'required', 'message' => 'Обязательно для заполнения'],
+            ['closed_at', 'date', 'format' => 'php:Y-m-d']
         ];
     }
 
