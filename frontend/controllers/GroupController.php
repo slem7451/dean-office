@@ -50,4 +50,12 @@ class GroupController extends Controller
             'dataProvider' => $dataProvider
         ]);
     }
+
+    public function actionView($id)
+    {
+        $group = Group::findGroup($id);
+        return $this->render('view', [
+            'group' => $group
+        ]);
+    }
 }

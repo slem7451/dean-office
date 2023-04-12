@@ -11,6 +11,8 @@ use yii\db\ActiveRecord;
  * @property string $first_name
  * @property string $second_name
  * @property string $patronymic
+ * @property string $sex
+ * @property string $phone
  * @property date $birthdate
  * @property timestamp $created_at
  * @property timestamp $closed_at

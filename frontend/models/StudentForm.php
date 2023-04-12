@@ -6,11 +6,16 @@ use yii\base\Model;
 
 class StudentForm extends Model
 {
+    const MALE = 'm';
+    const FEMALE = 'f';
+
     public $first_name;
     public $second_name;
     public $patronymic;
     public $group;
     public $birthdate;
+    public $sex;
+    public $phone;
 
 
     public function rules()
@@ -32,7 +37,13 @@ class StudentForm extends Model
             ['group', 'trim'],
 
             ['birthdate', 'required', 'message' => 'Обязательно для заполнения'],
-            ['birthdate', 'date', 'format' => 'php:Y-m-d']
+            ['birthdate', 'date', 'format' => 'php:Y-m-d'],
+
+            ['sex', 'required', 'message' => 'Обязательно для заполнения'],
+            ['sex', 'in', 'range' => [self::FEMALE, self::MALE], 'message' => 'Некорректный пол.'],
+
+            ['phone', 'required', 'message' => 'Обязательно для заполнения'],
+            ['phone', 'match', 'pattern' => '/^\+7\([0-9]{3}\)[0-9]{3}\-[0-9]{2}\-[0-9]{2}$/', 'message' => 'Некорректный телефон.']
 
         ];
     }
@@ -46,6 +57,8 @@ class StudentForm extends Model
             $student->first_name = $this->first_name;
             $student->second_name = $this->second_name;
             $student->patronymic = $this->patronymic;
+            $student->sex = $this->sex;
+            $student->phone = $this->phone;
             $student->birthdate = $this->birthdate;
             $success *= $student->save();
 

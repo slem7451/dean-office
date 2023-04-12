@@ -1,11 +1,14 @@
 <?php
 
+use common\helpers\SexHelper;
+use frontend\models\StudentForm;
 use kartik\date\DatePicker;
 use yii\bootstrap5\ActiveForm;
 use yii\bootstrap5\Modal;
 use yii\grid\GridView;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
+use yii\widgets\MaskedInput;
 use yii\widgets\Pjax;
 use common\helpers\AgeHelper;
 
@@ -32,7 +35,7 @@ $this->title = 'Студенты';
         echo $form->field($model, 'second_name')->textInput(['placeholder' => 'Фамилия'])->label(false);
         echo $form->field($model, 'patronymic')->textInput(['placeholder' => 'Отчество (при наличии)'])->label(false);
         ?>
-        <div class="row">
+        <div class="row mg-bottom-15px">
             <?php
             echo $form->field($model, 'group', ['options' => ['class' => 'col-6']])
                 ->dropDownList(ArrayHelper::map($groups, 'id', 'name'), [
@@ -50,6 +53,28 @@ $this->title = 'Студенты';
                 'options' => [
                     'placeholder' => 'Дата рождения'
                 ],
+            ])->label(false);
+            ?>
+        </div>
+        <div class="row">
+            <?php
+            echo $form->field($model, 'sex', ['options' => ['class' => 'col-6']])
+                ->dropDownList([
+                    StudentForm::MALE => 'Мужчина',
+                    StudentForm::FEMALE => 'Женщина'
+                ],
+                    [
+                        'prompt' => ['text' => 'Пол', 'options' => ['disabled' => true, 'selected' => true]],
+                        'id' => 'sex-for-student'
+                    ])
+                ->label(false);
+            echo $form->field($model, 'phone', ['options' => ['class' => 'col-6']])->widget(MaskedInput::class, [
+                'id' => 'phone-for-student',
+                'mask' => '+7(999)999-99-99',
+                'options' => [
+                    'placeholder' => 'Контактный телефон',
+                    'class' => 'form-control',
+                ]
             ])->label(false);
             ?>
         </div>
@@ -77,6 +102,18 @@ $this->title = 'Студенты';
                     'header' => 'Отчество',
                     'content' => function ($model) {
                         return '<p>' . $model->patronymic ? $model->patronymic : '</p>';
+                    }
+                ],
+                [
+                    'header' => 'Пол',
+                    'content' => function ($model) {
+                        return '<p>' . SexHelper::getSex($model->sex) . '</p>';
+                    }
+                ],
+                [
+                    'header' => 'Телефон',
+                    'content' => function ($model) {
+                        return '<p>' . $model->phone . '</p>';
                     }
                 ],
                 [

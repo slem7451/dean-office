@@ -16,7 +16,7 @@ class m230407_130509_create_update_trigger_for_student extends Migration
             CREATE OR REPLACE FUNCTION student_after_update_insert()
                 RETURNS trigger AS $$
             BEGIN
-                INSERT INTO student VALUES (old.id, old.first_name, old.second_name, old.patronymic, old.birthdate, old.created_at, NOW());
+                INSERT INTO student VALUES (old.id, old.first_name, old.second_name, old.patronymic, old.sex, old.phone, old.birthdate, old.created_at, NOW());
                 RETURN NULL;
             END
             $$

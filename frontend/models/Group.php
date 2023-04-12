@@ -29,4 +29,9 @@ class Group extends ActiveRecord
     {
         return self::find()->all();
     }
+
+    public static function findGroup($id)
+    {
+        return self::findOne(['id' => $id]);
+    }
 }

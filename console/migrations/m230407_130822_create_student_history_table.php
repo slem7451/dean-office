@@ -18,6 +18,8 @@ class m230407_130822_create_student_history_table extends Migration
             'first_name' => $this->string()->notNull(),
             'second_name' => $this->string()->notNull(),
             'patronymic' => $this->string()->notNull(),
+            'sex' => $this->string()->notNull(),
+            'phone' => $this->string()->notNull(),
             'birthdate' => $this->date()->notNull(),
             'created_at' => $this->timestamp()->defaultValue(new Expression('NOW()')),
             'closed_at' => $this->timestamp()->defaultValue(new Expression("DATE('3000-01-01 00:00:00')")),

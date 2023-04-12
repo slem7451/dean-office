@@ -53,4 +53,20 @@ class StudentController extends Controller
             'dataProvider' => $dataProvider
         ]);
     }
+
+    public function actionView($id)
+    {
+        $student = StudentView::findStudent($id);
+        return $this->render('view', [
+            'student' => $student
+        ]);
+    }
+
+    public function actionSearch($text)
+    {
+        $students = StudentView::findStudentsByText($text);
+        return $this->render('search', [
+            'students' => $students
+        ]);
+    }
 }

@@ -11,6 +11,8 @@ use yii\db\ActiveRecord;
  * @property string $first_name
  * @property string $second_name
  * @property string $patronymic
+ * @property string $sex
+ * @property string $phone
  * @property date $birthdate
  * @property timestamp $created_at
  * @property timestamp $closed_at
@@ -36,5 +38,26 @@ class StudentView extends ActiveRecord
     public static function findStudents()
     {
         return self::find()->with('group');
+    }
+
+    public static function findStudent($id)
+    {
+        return self::findOne(['id' => $id]);
+    }
+
+    public static function findStudentsByText($text)
+    {
+
+        return self::find()->where(['ilike', 'CONCAT_WS(second_name, first_name, patronymic)', $text])->all();
+    }
+
+    public static function findAllStudentsForSearch()
+    {
+        $students = self::find()->all();
+        $result = [];
+        foreach ($students as $student) {
+            $result[] = ['value' => $student->id, 'label' => $student->second_name . ' ' . $student->first_name . ($student->patronymic ? ' ' . $student->patronymic : '')];
+        }
+        return $result;
     }
 }
