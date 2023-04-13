@@ -32,6 +32,7 @@ class StudentController extends Controller
     public function actionIndex()
     {
         $model = new StudentForm();
+        $selectedStudent = new StudentForm();
         $groups = Group::findAllGroups();
         $students = StudentView::findStudents();
         $dataProvider = new ActiveDataProvider([
@@ -41,16 +42,32 @@ class StudentController extends Controller
             ]
         ]);
 
-        if ($model->load(Yii::$app->request->post()) && Yii::$app->request->isAjax) {
+        if ($model->load(Yii::$app->request->post()) && Yii::$app->request->isAjax && !Yii::$app->request->post('idUS')) {
             if ($model->validate()) {
                 $model->saveStudent();
             }
         }
 
+        if (Yii::$app->request->isPjax && Yii::$app->request->get('idUS')) {
+            $id = Yii::$app->request->get('idUS');
+            $selectedStudent->loadFromDB(StudentView::findStudent($id));
+        }
+
+        if ($model->load(Yii::$app->request->post()) && Yii::$app->request->isAjax && Yii::$app->request->post('idUS')) {
+            if ($model->validate()) {
+                $model->updateStudent(Yii::$app->request->post('idUS'));
+            }
+        }
+
+        if (Yii::$app->request->isAjax && Yii::$app->request->post('idDS')) {
+            StudentView::deleteStudent(Yii::$app->request->post('idDS'));
+        }
+
         return $this->render('index', [
             'model' => $model,
             'groups' => $groups,
-            'dataProvider' => $dataProvider
+            'dataProvider' => $dataProvider,
+            'selectedStudent' => $selectedStudent
         ]);
     }
 
@@ -65,8 +82,15 @@ class StudentController extends Controller
     public function actionSearch($text)
     {
         $students = StudentView::findStudentsByText($text);
+        $dataProvider = new ActiveDataProvider([
+            'query' => $students,
+            'pagination' => [
+                'pageSize' => 20,
+            ],
+        ]);
         return $this->render('search', [
-            'students' => $students
+            'students' => $students,
+            'dataProvider' => $dataProvider
         ]);
     }
 }

@@ -38,7 +38,7 @@ $this->title = 'Главная';
 $this->registerJs(<<<JS
     $(document).on('change', '[name="groups-select"]', function () {
         if (this.value) {
-            window.location.replace('http://localhost:20080/index.php?r=group%2Fview&id=' + this.value);
+            window.location.href = 'http://localhost:20080/index.php?r=group%2Fview&id=' + this.value;
         }
     });
 JS
@@ -48,7 +48,7 @@ $this->registerJs(<<<JS
     $(document).on('autocompleteselect', '#students-search', function(event, ui) {
         var id = ui.item.value;
         ui.item.value = ui.item.label;
-        window.location.replace('http://localhost:20080/index.php?r=student%2Fview&id=' + id);
+        window.location.href = 'http://localhost:20080/index.php?r=student%2Fview&id=' + id;
     });
 JS
 );
@@ -56,7 +56,7 @@ JS
 $this->registerJs(<<<JS
     $(document).on('keyup', '#students-search', function(event) {
         if (event.keyCode == 13 && this.value) {
-            window.location.replace('http://localhost:20080/index.php?r=student%2Fsearch&text=' + this.value);
+            window.location.href = 'http://localhost:20080/index.php?r=student%2Fsearch&text=' + this.value;
         }
     });
 JS

@@ -19,4 +19,9 @@ class StudentToGroup extends ActiveRecord
     {
         return '{{%student_to_group}}';
     }
+
+    public static function primaryKey()
+    {
+        return ['student_id', 'group_id'];
+    }
 }

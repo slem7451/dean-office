@@ -13,3 +13,46 @@
 .mg-bottom-15px {
     margin-bottom: 15px;
 }
+
+.result-item {
+    border: solid 1px;
+    margin-bottom: 10px;
+}
+
+.result-text {
+    margin-left: 10px;
+}
+
+.student-row {
+    cursor: pointer;
+}
+
+.none-display {
+    display: none;
+}
+
+.none-margin {
+    margin: 0;
+}
+
+.update-student-btn {
+    display: contents;
+    color: #0d6efd;
+}
+
+.update-student-btn:hover {
+    color: #0b5ed7;
+}
+
+.delete-student-btn {
+    display: contents;
+    color: #0d6efd;
+}
+
+.delete-student-btn:hover {
+    color: #0b5ed7;
+}
+
+.update-student-btn-modal {
+    margin-right: 56%;
+}

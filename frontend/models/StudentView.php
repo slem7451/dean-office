@@ -25,6 +25,11 @@ class StudentView extends ActiveRecord
         return '{{%student_view}}';
     }
 
+    public static function primaryKey()
+    {
+        return ['id', 'closed_at', 'created_at'];
+    }
+
     public function getToGroup()
     {
         return $this->hasOne(StudentToGroup::class, ['student_id' => 'id', 'created_at' => 'created_at', 'closed_at' => 'closed_at']);
@@ -48,7 +53,7 @@ class StudentView extends ActiveRecord
     public static function findStudentsByText($text)
     {
 
-        return self::find()->where(['ilike', 'CONCAT_WS(second_name, first_name, patronymic)', $text])->all();
+        return self::find()->where(['ilike', 'CONCAT_WS(second_name, first_name, patronymic)', $text]);
     }
 
     public static function findAllStudentsForSearch()
@@ -59,5 +64,17 @@ class StudentView extends ActiveRecord
             $result[] = ['value' => $student->id, 'label' => $student->second_name . ' ' . $student->first_name . ($student->patronymic ? ' ' . $student->patronymic : '')];
         }
         return $result;
+    }
+
+    public static function deleteStudent($id)
+    {
+        $student = self::findOne(['id' => $id]);
+        $studentToGroup = StudentToGroup::findAll(['student_id' => $id]);
+        $success = true;
+        foreach ($studentToGroup as $item) {
+            $success *= $item->delete();
+        }
+        $success *= $student->delete();
+        return $success;
     }
 }
