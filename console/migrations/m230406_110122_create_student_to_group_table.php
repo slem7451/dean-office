@@ -20,14 +20,6 @@ class m230406_110122_create_student_to_group_table extends Migration
             'closed_at' => $this->timestamp()->defaultValue(new Expression("DATE('3000-01-01 00:00:00')")),
         ]);
         $this->addForeignKey(
-            'student_to_group_to_student_fk',
-            'student_to_group',
-            ['student_id', 'created_at', 'closed_at'],
-            'student',
-            ['id', 'created_at', 'closed_at'],
-            'RESTRICT'
-        );
-        $this->addForeignKey(
             'student_to_group_to_group_fk',
             'student_to_group',
             'group_id',
@@ -43,7 +35,6 @@ class m230406_110122_create_student_to_group_table extends Migration
     public function safeDown()
     {
         $this->dropForeignKey('student_to_group_to_group_fk', 'student_to_group');
-        $this->dropForeignKey('student_to_group_to_student_fk', 'student_to_group');
         $this->dropTable('{{%student_to_group}}');
     }
 }

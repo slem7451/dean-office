@@ -3,6 +3,7 @@
 namespace frontend\models;
 
 use yii\base\Model;
+use yii\db\Expression;
 
 class StudentForm extends Model
 {
@@ -90,7 +91,7 @@ class StudentForm extends Model
     {
         $group = Group::findOne(['id' => $this->group]);
         $student = StudentView::findOne(['id' => $id]);
-        $studentToGroup = StudentToGroup::findOne(['student_id' => $student->id]);
+        $studentToGroup = StudentToGroup::find()->where(['student_id' => $student->id, "DATE_PART('year', closed_at)" => 3000])->one();
         $success = true;
         if ($group && $student && $studentToGroup) {
             $student->first_name = $this->first_name;
@@ -101,10 +102,12 @@ class StudentForm extends Model
             $student->birthdate = $this->birthdate;
             $success *= $student->save();
 
+            $studentToGroup->closed_at = new Expression('NOW()');
+            $success *= $studentToGroup->save();
+
+            $studentToGroup = new StudentToGroup();
             $studentToGroup->group_id = $this->group;
             $studentToGroup->student_id = $student->id;
-            $studentToGroup->created_at = $student->created_at;
-            $studentToGroup->closed_at = $student->closed_at;
             $success *= $studentToGroup->save();
         }
         return $success;

@@ -32,7 +32,7 @@ class StudentView extends ActiveRecord
 
     public function getToGroup()
     {
-        return $this->hasOne(StudentToGroup::class, ['student_id' => 'id', 'created_at' => 'created_at', 'closed_at' => 'closed_at']);
+        return $this->hasOne(StudentToGroup::class, ['student_id' => 'id', 'closed_at' => 'closed_at']);
     }
 
     public function getGroup()
@@ -43,6 +43,15 @@ class StudentView extends ActiveRecord
     public static function findStudents()
     {
         return self::find()->with('group');
+    }
+
+    public static function findStudentsNotInGroup($id)
+    {
+        return self::find()
+            ->leftJoin('student_to_group', 'student_to_group.student_id = student_view.id and student_to_group.closed_at = student_view.closed_at')
+            ->leftJoin('public.group', 'public.group.id = student_to_group.group_id')
+            ->where(['!=', 'public.group.id', $id])
+            ->all();
     }
 
     public static function findStudent($id)
@@ -76,5 +85,13 @@ class StudentView extends ActiveRecord
         }
         $success *= $student->delete();
         return $success;
+    }
+
+    public static function findStudentsByGroupId($id)
+    {
+        return self::find()
+            ->leftJoin('student_to_group', 'student_to_group.student_id = student_view.id')
+            ->leftJoin('public.group', 'public.group.id = student_to_group.group_id')
+            ->where(['public.group.id' => $id]);
     }
 }
