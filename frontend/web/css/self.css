@@ -56,3 +56,20 @@
 .update-student-btn-modal {
     margin-right: 56%;
 }
+
+.update-group-btn {
+    display: contents;
+    color: #0d6efd;
+}
+
+.update-group-btn:hover {
+    color: #0b5ed7;
+}
+
+.group-row {
+    cursor: pointer;
+}
+
+.update-group-btn-modal {
+    margin-right: 56%;
+}

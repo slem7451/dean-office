@@ -31,6 +31,7 @@ class GroupController extends Controller
     public function actionIndex()
     {
         $model = new GroupForm();
+        $selectedGroup = new GroupForm();
         $groups = Group::findGroups();
         $dataProvider = new ActiveDataProvider([
             'query' => $groups,
@@ -39,15 +40,27 @@ class GroupController extends Controller
             ],
         ]);
 
-        if ($model->load(Yii::$app->request->post()) && Yii::$app->request->isAjax) {
+        if ($model->load(Yii::$app->request->post()) && Yii::$app->request->isAjax && !Yii::$app->request->post('idUG')) {
             if ($model->validate()) {
                 $model->saveGroup();
             }
         }
 
+        if (Yii::$app->request->isPjax && Yii::$app->request->get('idUG')) {
+            $id = Yii::$app->request->get('idUG');
+            $selectedGroup->loadFromDB(Group::findGroup($id));
+        }
+
+        if ($model->load(Yii::$app->request->post()) && Yii::$app->request->isAjax && Yii::$app->request->post('idUG')) {
+            if ($model->validate()) {
+                $model->updateGroup(Yii::$app->request->post('idUG'));
+            }
+        }
+
         return $this->render('index', [
             'model' => $model,
-            'dataProvider' => $dataProvider
+            'dataProvider' => $dataProvider,
+            'selectedGroup' => $selectedGroup
         ]);
     }
 

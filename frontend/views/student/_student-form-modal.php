@@ -1,6 +1,8 @@
 <?php
 /** @var \yii\bootstrap5\ActiveForm $form */
+
 /** @var \frontend\models\StudentForm $model */
+
 /** @var \frontend\models\Group $groups */
 
 /** @var string $operation */

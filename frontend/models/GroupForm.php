@@ -33,4 +33,20 @@ class GroupForm extends Model
         $group->closed_at = $this->closed_at;
         return $group->save();
     }
+
+    public function loadFromDB($group)
+    {
+        $this->name = $group->name;
+        $this->created_at = $group->created_at;
+        $this->closed_at = $group->closed_at;
+    }
+
+    public function updateGroup($id)
+    {
+        $group = Group::findOne(['id' => $id]);
+        $group->name = $this->name;
+        $group->created_at = $this->created_at;
+        $group->closed_at = $this->closed_at;
+        return $group->save();
+    }
 }
