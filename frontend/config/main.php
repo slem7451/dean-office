@@ -36,6 +36,10 @@ return [
         'errorHandler' => [
             'errorAction' => 'site/error',
         ],
+        'inflection' => [
+            'class' => 'wapmorgan\yii2inflection\Inflection',
+            'language' => 'ru_RU'
+        ],
         /*
         'urlManager' => [
             'enablePrettyUrl' => true,
