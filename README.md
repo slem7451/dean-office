@@ -18,3 +18,4 @@
 - https://getbootstrap.com (на русском: https://bootstrap5.ru)
 - https://smartiqa.ru/courses/git
 - https://www.php.net
+- https://adminlte.io/themes/v3

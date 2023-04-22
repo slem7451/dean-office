@@ -29,7 +29,7 @@ $this->title = $student->second_name . ' ' . $student->first_name;
             [
                 'label' => 'Отчество (при наличии)',
                 'attribute' => function ($model) {
-                    return $model->first_name;
+                    return $model->patronymic;
                 }
             ],
             [

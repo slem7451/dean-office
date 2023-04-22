@@ -73,3 +73,8 @@
 .update-group-btn-modal {
     margin-right: 56%;
 }
+
+.logo {
+    content: url(/csu.png);
+    margin-bottom: -5px;
+}

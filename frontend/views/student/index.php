@@ -49,6 +49,7 @@ $deleteIcon = '<svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fi
         Pjax::begin(['id' => 'student-table-pjax']);
         echo GridView::widget([
             'dataProvider' => $dataProvider,
+            'tableOptions' => ['class' => 'table table-bordered table-hover dataTable dtr-inline'],
             'layout' => "{items}\n{pager}",
             'rowOptions' => function ($model, $key, $index, $grid) {
                 return ['class' => 'student-row', 'id' => $model->id . '-' . 'student-id', 'title' => 'Посмотреть подробно'];
