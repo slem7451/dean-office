@@ -4,7 +4,7 @@ use common\helpers\GroupHelper;
 use common\helpers\SexHelper;
 use frontend\models\StudentForm;
 use yii\bootstrap5\ActiveForm;
-use yii\bootstrap5\Modal;
+use yii\bootstrap4\Modal;
 use yii\grid\GridView;
 use yii\helpers\Html;
 use yii\widgets\Pjax;
@@ -35,7 +35,7 @@ $deleteIcon = '<svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fi
             'title' => 'Создание студента',
             'footer' => Html::submitButton('Создать', ['class' => 'btn btn-success save-student-btn']) . Html::button('Закрыть', [
                     'class' => 'btn btn-danger',
-                    'data-bs-dismiss' => 'modal'
+                    'data-dismiss' => 'modal'
                 ])
         ]);
         echo $this->render('_student-form-modal', [
@@ -119,7 +119,7 @@ Modal::begin([
     'title' => 'Редактирование студента',
     'footer' => Html::submitButton('Сохранить', ['class' => 'btn btn-success update-student-btn-modal']) . Html::button('Закрыть', [
             'class' => 'btn btn-danger',
-            'data-bs-dismiss' => 'modal'
+            'data-dismiss' => 'modal'
         ])
 ]);
 echo $this->render('_student-form-modal', [

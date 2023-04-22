@@ -29,7 +29,7 @@ $this->title = 'Главная';
             ]); ?>
             <?= Html::dropDownList('groups-select', null, ArrayHelper::map($groups, 'id', 'name'), [
                 'prompt' => ['text' => 'Группы', 'options' => ['selected' => true]],
-                'class' => 'form-select',
+                'class' => 'form-control',
             ]) ?>
         </div>
     </div>

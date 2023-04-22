@@ -14,7 +14,7 @@ use common\helpers\AgeHelper;
 use common\helpers\SexHelper;
 use kartik\select2\Select2;
 use yii\bootstrap5\ActiveForm;
-use yii\bootstrap5\Modal;
+use yii\bootstrap4\Modal;
 use yii\grid\GridView;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
@@ -123,7 +123,7 @@ Modal::begin([
     'title' => 'Редактирование студента',
     'footer' => Html::submitButton('Сохранить', ['class' => 'btn btn-success update-student-btn-modal']) . Html::button('Закрыть', [
             'class' => 'btn btn-danger',
-            'data-bs-dismiss' => 'modal'
+            'data-dismiss' => 'modal'
         ])
 ]);
 echo $this->render('/student/_student-form-modal', [

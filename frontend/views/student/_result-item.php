@@ -7,9 +7,11 @@ use yii\helpers\Html;
 
 ?>
 
-<div class="result-item">
-    <div class="result-text">
+<div class="card">
+    <div class="card-header">
         <?= Html::a($model->second_name . ' ' . $model->first_name . ($model->patronymic ? ' ' . $model->patronymic : ''), ['student/view', 'id' => $model->id]) ?>
+    </div>
+    <div class="card-body">
         <div><?= SexHelper::getDetailSex($model->sex) ?></div>
         <div><?= GroupHelper::getFullName($model->group) ?></div>
     </div>

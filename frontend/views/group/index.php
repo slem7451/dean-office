@@ -5,7 +5,7 @@
 
 /** @var \yii\data\ActiveDataProvider $dataProvider */
 
-use yii\bootstrap5\Modal;
+use yii\bootstrap4\Modal;
 use yii\grid\GridView;
 use yii\helpers\Html;
 use yii\bootstrap5\ActiveForm;
@@ -27,7 +27,7 @@ $updateIcon = '<svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fi
             'title' => 'Создание группы',
             'footer' => Html::submitButton('Создать', ['class' => 'btn btn-success save-group-btn']) . Html::button('Закрыть', [
                     'class' => 'btn btn-danger',
-                    'data-bs-dismiss' => 'modal'
+                    'data-dismiss' => 'modal'
                 ])
         ]);
         echo $this->render('_group-form-modal', [
@@ -85,7 +85,7 @@ Modal::begin([
     'title' => 'Редактирование группы',
     'footer' => Html::submitButton('Сохранить', ['class' => 'btn btn-success update-group-btn-modal']) . Html::button('Закрыть', [
             'class' => 'btn btn-danger',
-            'data-bs-dismiss' => 'modal'
+            'data-dismiss' => 'modal'
         ])
 ]);
 echo $this->render('_group-form-modal', [
