@@ -87,3 +87,7 @@
 .action-btn:hover {
     color: #0b5ed7;
 }
+
+.width-1-p {
+    width: 1% !important;
+}

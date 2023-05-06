@@ -39,6 +39,9 @@ class FlowController extends Controller
             'pagination' => [
                 'pageSize' => 10,
             ],
+            'sort' => [
+                'defaultOrder' => ['name' => SORT_ASC],
+            ]
         ]);
 
         if (Yii::$app->request->isPjax && Yii::$app->request->get('idUF')) {
@@ -53,7 +56,7 @@ class FlowController extends Controller
         }
 
         if ($selectedFlow->load(Yii::$app->request->post()) && Yii::$app->request->isAjax && Yii::$app->request->post('idUF')) {
-            if ($model->validate()) {
+            if ($selectedFlow->validate()) {
                 $selectedFlow->updateFlow(Yii::$app->request->post('idUF'));
             }
         }

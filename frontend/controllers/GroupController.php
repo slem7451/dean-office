@@ -2,6 +2,8 @@
 
 namespace frontend\controllers;
 
+use frontend\models\AcademicDegree;
+use frontend\models\AcademicDegreeForm;
 use frontend\models\Group;
 use frontend\models\GroupForm;
 use frontend\models\Student;
@@ -94,6 +96,51 @@ class GroupController extends Controller
             'selectedStudent' => $selectedStudent,
             'studentsDataProvider' => $studentsDataProvider,
             'allStudents' => $allStudents
+        ]);
+    }
+
+    public function actionAcademicDegree()
+    {
+        $model = new AcademicDegreeForm();
+        $selectedAcademicDegree = new AcademicDegreeForm();
+        $academicDegrees = AcademicDegree::findAcademicDegrees();
+        $dataProvider = new ActiveDataProvider([
+            'query' => $academicDegrees,
+            'pagination' => [
+                'pageSize' => 20,
+            ],
+            'sort' => [
+                'defaultOrder' => ['name' => SORT_ASC],
+            ]
+        ]);
+
+        if ($model->load(Yii::$app->request->post()) && Yii::$app->request->isAjax && !Yii::$app->request->post('idUA')) {
+            if ($model->validate()) {
+                $model->saveAcademicDegree();
+            }
+        }
+
+        if (Yii::$app->request->isPjax && Yii::$app->request->get('idUA')) {
+            $id = Yii::$app->request->get('idUA');
+            $selectedAcademicDegree->loadFromDB(AcademicDegree::findAcademicDegree($id));
+        }
+
+        if ($selectedAcademicDegree->load(Yii::$app->request->post()) && Yii::$app->request->isAjax && Yii::$app->request->post('idUA')) {
+            if ($selectedAcademicDegree->validate()) {
+                $selectedAcademicDegree->updateAcademicDegree(Yii::$app->request->post('idUA'));
+            }
+        }
+
+        if (Yii::$app->request->isAjax && Yii::$app->request->post('idDA')) {
+            if (!AcademicDegree::deleteAcademicDegree(Yii::$app->request->post('idDA'))) {
+                return 0;
+            }
+        }
+
+        return $this->render('academic-degree', [
+            'model' => $model,
+            'selectedAcademicDegree' => $selectedAcademicDegree,
+            'dataProvider' => $dataProvider
         ]);
     }
 }
