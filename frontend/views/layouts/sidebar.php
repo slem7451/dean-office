@@ -39,12 +39,11 @@
                     ['label' => 'Главная', 'iconClass' => 'logo nav-icon', 'url' => \yii\helpers\Url::home()],
                     [
                         'label' => 'Контингент',
-                        'icon' => 'user',
+                        'icon' => 'id-card',
                         'items' => [
-                            ['label' => 'Потоки', 'icon' => 'paper-plane', 'url' => ['#']],
+                            ['label' => 'Потоки', 'icon' => 'paper-plane', 'url' => ['/flow/index']],
                             ['label' => 'Группы', 'icon' => 'users', 'url' => ['/group/index']],
                             ['label' => 'Студенты', 'icon' => 'user-graduate', 'url' => ['/student/index']],
-                            ['label' => 'Документы', 'icon' => 'id-card', 'url' => ['#']],
                             ['label' => 'Академические степени', 'icon' => 'graduation-cap', 'url' => ['#']],
                             ['label' => 'Направления', 'icon' => 'clipboard', 'url' => ['#']],
                         ]
