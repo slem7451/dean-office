@@ -3,8 +3,8 @@
 namespace frontend\controllers;
 
 use frontend\models\Group;
+use frontend\models\Student;
 use frontend\models\StudentForm;
-use frontend\models\StudentView;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
@@ -34,7 +34,7 @@ class StudentController extends Controller
         $model = new StudentForm();
         $selectedStudent = new StudentForm();
         $groups = Group::findAllGroups();
-        $students = StudentView::findStudents();
+        $students = Student::findStudents();
         $dataProvider = new ActiveDataProvider([
             'query' => $students,
             'pagination' => [
@@ -50,7 +50,7 @@ class StudentController extends Controller
 
         if (Yii::$app->request->isPjax && Yii::$app->request->get('idUS')) {
             $id = Yii::$app->request->get('idUS');
-            $selectedStudent->loadFromDB(StudentView::findStudent($id));
+            $selectedStudent->loadFromDB(Student::findStudent($id));
         }
 
         if ($model->load(Yii::$app->request->post()) && Yii::$app->request->isAjax && Yii::$app->request->post('idUS')) {
@@ -60,7 +60,7 @@ class StudentController extends Controller
         }
 
         if (Yii::$app->request->isAjax && Yii::$app->request->post('idDS')) {
-            StudentView::deleteStudent(Yii::$app->request->post('idDS'));
+
         }
 
         return $this->render('index', [
@@ -73,7 +73,7 @@ class StudentController extends Controller
 
     public function actionView($id)
     {
-        $student = StudentView::findStudent($id);
+        $student = Student::findStudent($id);
         return $this->render('view', [
             'student' => $student
         ]);
@@ -81,7 +81,7 @@ class StudentController extends Controller
 
     public function actionSearch($text)
     {
-        $students = StudentView::findStudentsByText($text);
+        $students = Student::findStudentsByText($text);
         $dataProvider = new ActiveDataProvider([
             'query' => $students,
             'pagination' => [

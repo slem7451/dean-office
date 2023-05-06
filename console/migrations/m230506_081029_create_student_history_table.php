@@ -6,7 +6,7 @@ use yii\db\Migration;
 /**
  * Handles the creation of table `{{%student_history}}`.
  */
-class m230407_130822_create_student_history_table extends Migration
+class m230506_081029_create_student_history_table extends Migration
 {
     /**
      * {@inheritdoc}
@@ -14,18 +14,27 @@ class m230407_130822_create_student_history_table extends Migration
     public function safeUp()
     {
         $this->createTable('{{%student_history}}', [
-            'student_id' => $this->integer()->notNull(),
+            'id' => $this->integer()->notNull(),
             'first_name' => $this->string()->notNull(),
             'second_name' => $this->string()->notNull(),
             'patronymic' => $this->string()->notNull(),
             'sex' => $this->string()->notNull(),
             'phone' => $this->string()->notNull(),
+            'payment' => $this->tinyInteger()->notNull(),
             'birthdate' => $this->date()->notNull(),
-            'created_at' => $this->timestamp()->defaultValue(new Expression('NOW()')),
-            'closed_at' => $this->timestamp()->defaultValue(new Expression("DATE('3000-01-01 00:00:00')")),
-            'updated_at' => $this->timestamp()->defaultValue(new Expression('NOW()')),
-            'operation' => $this->tinyInteger()
+            'created_at' => $this->date()->notNull(),
+            'closed_at' => $this->date()->null(),
+            'updated_at' => $this->date()->defaultValue(new Expression('NOW()')),
+            'operation' => $this->tinyInteger()->notNull()
         ]);
+
+        $this->addForeignKey(
+            'student_history_to_student-fk',
+            'student_history',
+            'id',
+            'student',
+            'id'
+        );
     }
 
     /**
@@ -33,6 +42,7 @@ class m230407_130822_create_student_history_table extends Migration
      */
     public function safeDown()
     {
+        $this->dropForeignKey('student_history_to_student-fk', 'student_history');
         $this->dropTable('{{%student_history}}');
     }
 }

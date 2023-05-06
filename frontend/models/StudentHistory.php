@@ -7,16 +7,17 @@ use yii\db\ActiveRecord;
 /**
  * StudentHistory model
  *
- * @property integer $student_id
+ * @property integer $id
  * @property string $first_name
  * @property string $second_name
  * @property string $patronymic
  * @property string $sex
  * @property string $phone
+ * @property tinyInteger $payment
  * @property date $birthdate
- * @property timestamp $created_at
- * @property timestamp $closed_at
- * @property timestamp $updated_at
+ * @property date $created_at
+ * @property date $closed_at
+ * @property date $updated_at
  * @property tinyInteger $operation
  */
 

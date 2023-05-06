@@ -4,7 +4,7 @@ namespace frontend\controllers;
 
 use frontend\models\Group;
 use frontend\models\ResendVerificationEmailForm;
-use frontend\models\StudentView;
+use frontend\models\Student;
 use frontend\models\VerifyEmailForm;
 use Yii;
 use yii\base\InvalidArgumentException;
@@ -78,7 +78,7 @@ class SiteController extends Controller
     public function actionIndex()
     {
         $groups = Group::findAllGroups();
-        $students = StudentView::findAllStudentsForSearch();
+        $students = Student::findAllStudentsForSearch();
         return $this->render('index', [
             'groups' => $groups,
             'students' => $students

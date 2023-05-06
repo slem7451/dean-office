@@ -6,26 +6,25 @@ use yii\db\Migration;
 /**
  * Handles the creation of table `{{%student}}`.
  */
-class m230406_102832_create_student_table extends Migration
+class m230506_080719_create_student_table extends Migration
 {
     /**
      * {@inheritdoc}
      */
     public function safeUp()
     {
-        $this->execute('CREATE SEQUENCE student_seq START 1');
         $this->createTable('{{%student}}', [
-            'id' => $this->integer()->defaultValue(new Expression("NEXTVAL('student_seq')")),
+            'id' => $this->primaryKey(),
             'first_name' => $this->string()->notNull(),
             'second_name' => $this->string()->notNull(),
             'patronymic' => $this->string()->notNull(),
             'sex' => $this->string()->notNull(),
             'phone' => $this->string()->notNull(),
+            'payment' => $this->tinyInteger()->notNull(),
             'birthdate' => $this->date()->notNull(),
-            'created_at' => $this->timestamp()->defaultValue(new Expression('NOW()')),
-            'closed_at' => $this->timestamp()->defaultValue(new Expression("DATE('3000-01-01 00:00:00')")),
+            'created_at' => $this->date()->notNull(),
+            'closed_at' => $this->date()->null(),
         ]);
-        $this->addPrimaryKey('student_pk', 'student', ['id', 'closed_at', 'created_at']);
     }
 
     /**
@@ -33,8 +32,6 @@ class m230406_102832_create_student_table extends Migration
      */
     public function safeDown()
     {
-        $this->dropPrimaryKey('student_pk', 'student');
         $this->dropTable('{{%student}}');
-        $this->execute('DROP SEQUENCE student_seq');
     }
 }

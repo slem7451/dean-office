@@ -10,8 +10,8 @@ use yii\db\Expression;
  *
  * @property integer $student_id
  * @property integer $group_id
- * @property timestamp $created_at
- * @property timestamp $closed_at
+ * @property date $created_at
+ * @property date $closed_at
  */
 
 class StudentToGroup extends ActiveRecord

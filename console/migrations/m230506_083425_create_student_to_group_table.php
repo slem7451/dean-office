@@ -1,12 +1,11 @@
 <?php
 
-use yii\db\Expression;
 use yii\db\Migration;
 
 /**
  * Handles the creation of table `{{%student_to_group}}`.
  */
-class m230406_110122_create_student_to_group_table extends Migration
+class m230506_083425_create_student_to_group_table extends Migration
 {
     /**
      * {@inheritdoc}
@@ -16,16 +15,24 @@ class m230406_110122_create_student_to_group_table extends Migration
         $this->createTable('{{%student_to_group}}', [
             'student_id' => $this->integer()->notNull(),
             'group_id' => $this->integer()->notNull(),
-            'created_at' => $this->timestamp()->defaultValue(new Expression('NOW()')),
-            'closed_at' => $this->timestamp()->defaultValue(new Expression("DATE('3000-01-01 00:00:00')")),
+            'created_at' => $this->date()->notNull(),
+            'closed_at' => $this->date()->null()
         ]);
+
         $this->addForeignKey(
-            'student_to_group_to_group_fk',
+            'student_to_group_to_student-fk',
+            'student_to_group',
+            'student_id',
+            'student',
+            'id'
+        );
+
+        $this->addForeignKey(
+            'student_to_group_to_group-fk',
             'student_to_group',
             'group_id',
             'group',
-            'id',
-            'RESTRICT'
+            'id'
         );
     }
 
@@ -34,7 +41,8 @@ class m230406_110122_create_student_to_group_table extends Migration
      */
     public function safeDown()
     {
-        $this->dropForeignKey('student_to_group_to_group_fk', 'student_to_group');
+        $this->dropForeignKey('student_to_group_to_group-fk', 'student_to_group');
+        $this->dropForeignKey('student_to_group_to_student-fk', 'student_to_group');
         $this->dropTable('{{%student_to_group}}');
     }
 }
