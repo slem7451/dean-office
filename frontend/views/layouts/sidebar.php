@@ -39,10 +39,24 @@
                     ['label' => 'Главная', 'iconClass' => 'logo nav-icon', 'url' => \yii\helpers\Url::home()],
                     [
                         'label' => 'Контингент',
-                        'icon' => 'users',
+                        'icon' => 'user',
                         'items' => [
+                            ['label' => 'Потоки', 'icon' => 'paper-plane', 'url' => ['#']],
                             ['label' => 'Группы', 'icon' => 'users', 'url' => ['/group/index']],
-                            ['label' => 'Студенты', 'icon' => 'user', 'url' => ['/student/index']],
+                            ['label' => 'Студенты', 'icon' => 'user-graduate', 'url' => ['/student/index']],
+                            ['label' => 'Документы', 'icon' => 'id-card', 'url' => ['#']],
+                            ['label' => 'Академические степени', 'icon' => 'graduation-cap', 'url' => ['#']],
+                            ['label' => 'Направления', 'icon' => 'clipboard', 'url' => ['#']],
+                        ]
+                    ],
+                    [
+                        'label' => 'Приказы и справки',
+                        'icon' => 'file',
+                        'items' => [
+                            ['label' => 'Приказы', 'icon' => 'folder-open', 'url' => ['#']],
+                            ['label' => 'Шаблоны приказов', 'icon' => 'folder', 'url' => ['#']],
+                            ['label' => 'Справки', 'icon' => 'stamp', 'url' => ['#']],
+                            ['label' => 'Шаблоны справок', 'icon' => 'clipboard-check', 'url' => ['#']],
                         ]
                     ]
                 ],
