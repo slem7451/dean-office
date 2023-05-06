@@ -19,3 +19,4 @@
 - https://smartiqa.ru/courses/git
 - https://www.php.net
 - https://yiipowered.com/ru
+- https://adminlte.io/themes/v3

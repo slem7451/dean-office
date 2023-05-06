@@ -36,6 +36,10 @@ return [
         'errorHandler' => [
             'errorAction' => 'site/error',
         ],
+        'inflection' => [
+            'class' => 'wapmorgan\yii2inflection\Inflection',
+            'language' => 'ru_RU'
+        ],
         /*
         'urlManager' => [
             'enablePrettyUrl' => true,
@@ -45,5 +49,12 @@ return [
         ],
         */
     ],
+    'container' => [
+        'definitions' => [
+            'yii\widgets\LinkPager' => 'yii\bootstrap5\LinkPager'
+        ]
+    ],
+    'language' => 'ru-RU',
+    'name' => 'Деканат',
     'params' => $params,
 ];

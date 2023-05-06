@@ -9,9 +9,12 @@ use yii\db\ActiveRecord;
  *
  * @property integer $id
  * @property string $name
+ * @property string $direction_id
+ * @property integer $academic_id
  * @property date $created_at
  * @property date $closed_at
  */
+
 class Group extends ActiveRecord
 {
     public static function tableName()
@@ -22,5 +25,15 @@ class Group extends ActiveRecord
     public static function findGroups()
     {
         return self::find();
+    }
+
+    public static function findAllGroups()
+    {
+        return self::find()->all();
+    }
+
+    public static function findGroup($id)
+    {
+        return self::findOne(['id' => $id]);
     }
 }

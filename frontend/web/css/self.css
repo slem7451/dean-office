@@ -5,3 +5,76 @@
 .save-group-btn {
     margin-right: 60%;
 }
+
+.save-student-btn {
+    margin-right: 60%;
+}
+
+.mg-bottom-15px {
+    margin-bottom: 15px;
+}
+
+.result-item {
+    border: solid 1px;
+    margin-bottom: 10px;
+}
+
+.result-text {
+    margin-left: 10px;
+}
+
+.student-row {
+    cursor: pointer;
+}
+
+.none-display {
+    display: none;
+}
+
+.none-margin {
+    margin: 0;
+}
+
+.update-student-btn {
+    display: contents;
+    color: #0d6efd;
+}
+
+.update-student-btn:hover {
+    color: #0b5ed7;
+}
+
+.delete-student-btn {
+    display: contents;
+    color: #0d6efd;
+}
+
+.delete-student-btn:hover {
+    color: #0b5ed7;
+}
+
+.update-student-btn-modal {
+    margin-right: 56%;
+}
+
+.update-group-btn {
+    display: contents;
+    color: #0d6efd;
+}
+
+.update-group-btn:hover {
+    color: #0b5ed7;
+}
+
+.group-row {
+    cursor: pointer;
+}
+
+.update-group-btn-modal {
+    margin-right: 56%;
+}
+
+.logo {
+    content: url(/csu.png);
+    margin-bottom: -5px;
+}
