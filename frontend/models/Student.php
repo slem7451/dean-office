@@ -81,4 +81,18 @@ class Student extends ActiveRecord
             ->where(['!=', 'public.group.id', $id])
             ->all();
     }
+
+    public static function closeStudent($id)
+    {
+        $student = Student::findOne(['id' => $id]);
+        $student->closed_at = new Expression('NOW()');
+        return $student->save();
+    }
+
+    public static function openStudent($id)
+    {
+        $student = Student::findOne(['id' => $id]);
+        $student->closed_at = new Expression('null');
+        return $student->save();
+    }
 }

@@ -7,7 +7,7 @@
 }
 
 .save-student-btn {
-    margin-right: 60%;
+    margin-right: 76%;
 }
 
 .mg-bottom-15px {
@@ -35,26 +35,8 @@
     margin: 0;
 }
 
-.update-student-btn {
-    display: contents;
-    color: #0d6efd;
-}
-
-.update-student-btn:hover {
-    color: #0b5ed7;
-}
-
-.delete-student-btn {
-    display: contents;
-    color: #0d6efd;
-}
-
-.delete-student-btn:hover {
-    color: #0b5ed7;
-}
-
 .update-student-btn-modal {
-    margin-right: 56%;
+    margin-right: 74%;
 }
 
 .group-row {
@@ -81,4 +63,11 @@
 
 .width-1-p {
     width: 1% !important;
+}
+
+.document-img {
+    object-fit: cover;
+    width: 100%;
+    height: 100%;
+    margin-bottom: 10px;
 }
