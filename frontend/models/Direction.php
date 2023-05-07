@@ -17,4 +17,24 @@ class Direction extends ActiveRecord
     {
         return '{{%direction}}';
     }
+
+    public static function findDirections()
+    {
+        return self::find();
+    }
+
+    public static function deleteDirection($id)
+    {
+        $direction = self::findOne(['id' => $id]);
+        $groups = Group::findAll(['direction_id' => $id]);
+        if (count($groups)) {
+            return false;
+        }
+        return $direction->delete();
+    }
+
+    public static function findDirection($id)
+    {
+        return self::findOne(['id' => $id]);
+    }
 }

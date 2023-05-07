@@ -4,6 +4,8 @@ namespace frontend\controllers;
 
 use frontend\models\AcademicDegree;
 use frontend\models\AcademicDegreeForm;
+use frontend\models\Direction;
+use frontend\models\DirectionForm;
 use frontend\models\Group;
 use frontend\models\GroupForm;
 use frontend\models\Student;
@@ -140,6 +142,51 @@ class GroupController extends Controller
         return $this->render('academic-degree', [
             'model' => $model,
             'selectedAcademicDegree' => $selectedAcademicDegree,
+            'dataProvider' => $dataProvider
+        ]);
+    }
+
+    public function actionDirection()
+    {
+        $model = new DirectionForm();
+        $selectedDirection = new DirectionForm();
+        $directions = Direction::findDirections();
+        $dataProvider = new ActiveDataProvider([
+            'query' => $directions,
+            'pagination' => [
+                'pageSize' => 20,
+            ],
+            'sort' => [
+                'defaultOrder' => ['name' => SORT_ASC],
+            ]
+        ]);
+
+        if ($model->load(Yii::$app->request->post()) && Yii::$app->request->isAjax && !Yii::$app->request->post('idUD')) {
+            if ($model->validate()) {
+                $model->saveDirection();
+            }
+        }
+
+        if (Yii::$app->request->isPjax && Yii::$app->request->get('idUD')) {
+            $id = Yii::$app->request->get('idUD');
+            $selectedDirection->loadFromDB(Direction::findDirection($id));
+        }
+
+        if ($selectedDirection->load(Yii::$app->request->post()) && Yii::$app->request->isAjax && Yii::$app->request->post('idUD')) {
+            if ($selectedDirection->validate()) {
+                $selectedDirection->updateDirection(Yii::$app->request->post('idUD'));
+            }
+        }
+
+        if (Yii::$app->request->isAjax && Yii::$app->request->post('idDD')) {
+            if (!Direction::deleteDirection(Yii::$app->request->post('idDD'))) {
+                return 0;
+            }
+        }
+
+        return $this->render('direction', [
+            'model' => $model,
+            'selectedDirection' => $selectedDirection,
             'dataProvider' => $dataProvider
         ]);
     }
