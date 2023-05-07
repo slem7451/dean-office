@@ -37,4 +37,9 @@ class AcademicDegree extends ActiveRecord
         }
         return $academicDegree->delete();
     }
+
+    public static function findAllAcademicDegrees()
+    {
+        return self::find()->all();
+    }
 }

@@ -37,4 +37,9 @@ class Direction extends ActiveRecord
     {
         return self::findOne(['id' => $id]);
     }
+
+    public static function findAllDirections()
+    {
+        return self::find()->all();
+    }
 }

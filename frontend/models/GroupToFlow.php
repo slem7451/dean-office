@@ -17,4 +17,9 @@ class GroupToFlow extends ActiveRecord
     {
         return '{{%group_to_flow}}';
     }
+
+    public static function primaryKey()
+    {
+        return ['group_id', 'flow_id'];
+    }
 }

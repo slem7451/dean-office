@@ -3,6 +3,7 @@
 namespace frontend\models;
 
 use yii\db\ActiveRecord;
+use yii\db\Expression;
 
 /**
  * Group model
@@ -22,9 +23,39 @@ class Group extends ActiveRecord
         return '{{%group}}';
     }
 
+    public function getToFlow()
+    {
+        return $this->hasOne(GroupToFlow::class, ['group_id' => 'id']);
+    }
+
+    public function getFlow()
+    {
+        return $this->hasOne(Flow::class, ['id' => 'flow_id'])->via('toFlow');
+    }
+
+    public function getDirection()
+    {
+        return $this->hasOne(Direction::class, ['id' => 'direction_id']);
+    }
+
+    public function getAcademicDegree()
+    {
+        return $this->hasOne(AcademicDegree::class, ['id' => 'academic_id']);
+    }
+
+    public function getToStudents()
+    {
+        return $this->hasMany(StudentToGroup::class, ['group_id' => 'id']);
+    }
+
+    public function getStudents()
+    {
+        return $this->hasMany(Student::class, ['id' => 'student_id'])->via('toStudents');
+    }
+
     public static function findGroups()
     {
-        return self::find();
+        return self::find()->with(['flow', 'direction', 'academicDegree', 'students']);
     }
 
     public static function findAllGroups()
@@ -35,5 +66,17 @@ class Group extends ActiveRecord
     public static function findGroup($id)
     {
         return self::findOne(['id' => $id]);
+    }
+
+    public static function closeGroup($id)
+    {
+        $group = self::findOne(['id' => $id]);
+        $group->closed_at = new Expression('NOW()');
+        return $group->save();
+    }
+
+    public static function findAllNotClosedGroups()
+    {
+        return self::find()->where(['is', 'closed_at', new Expression('null')])->all();
     }
 }

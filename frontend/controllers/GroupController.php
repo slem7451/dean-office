@@ -6,6 +6,7 @@ use frontend\models\AcademicDegree;
 use frontend\models\AcademicDegreeForm;
 use frontend\models\Direction;
 use frontend\models\DirectionForm;
+use frontend\models\Flow;
 use frontend\models\Group;
 use frontend\models\GroupForm;
 use frontend\models\Student;
@@ -40,11 +41,17 @@ class GroupController extends Controller
         $model = new GroupForm();
         $selectedGroup = new GroupForm();
         $groups = Group::findGroups();
+        $directions = Direction::findAllDirections();
+        $academicDegrees = AcademicDegree::findAllAcademicDegrees();
+        $flows = Flow::findAllNotClosedFlows();
         $dataProvider = new ActiveDataProvider([
             'query' => $groups,
             'pagination' => [
                 'pageSize' => 10,
             ],
+            'sort' => [
+                'defaultOrder' => ['name' => SORT_ASC],
+            ]
         ]);
 
         if ($model->load(Yii::$app->request->post()) && Yii::$app->request->isAjax && !Yii::$app->request->post('idUG')) {
@@ -58,16 +65,23 @@ class GroupController extends Controller
             $selectedGroup->loadFromDB(Group::findGroup($id));
         }
 
-        if ($model->load(Yii::$app->request->post()) && Yii::$app->request->isAjax && Yii::$app->request->post('idUG')) {
-            if ($model->validate()) {
-                $model->updateGroup(Yii::$app->request->post('idUG'));
+        if ($selectedGroup->load(Yii::$app->request->post()) && Yii::$app->request->isAjax && Yii::$app->request->post('idUG')) {
+            if ($selectedGroup->validate()) {
+                $selectedGroup->updateGroup(Yii::$app->request->post('idUG'));
             }
+        }
+
+        if (Yii::$app->request->isAjax && Yii::$app->request->post('idCG')) {
+            Group::closeGroup(Yii::$app->request->post('idCG'));
         }
 
         return $this->render('index', [
             'model' => $model,
             'dataProvider' => $dataProvider,
-            'selectedGroup' => $selectedGroup
+            'selectedGroup' => $selectedGroup,
+            'directions' => $directions,
+            'academicDegrees' => $academicDegrees,
+            'flows' => $flows
         ]);
     }
 

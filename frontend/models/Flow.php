@@ -28,7 +28,7 @@ class Flow extends ActiveRecord
 
     public function getGroups()
     {
-        return $this->hasMany(Group::class, ['group_id' => 'id'])->via('toGroups');
+        return $this->hasMany(Group::class, ['id' => 'group_id'])->via('toGroups');
     }
 
     public static function findFlows()
@@ -46,5 +46,10 @@ class Flow extends ActiveRecord
         $flow = self::findOne(['id' => $id]);
         $flow->closed_at = new Expression('NOW()');
         return $flow->save();
+    }
+
+    public static function findAllNotClosedFlows()
+    {
+        return self::find()->where(['is', 'closed_at', new Expression('null')])->all();
     }
 }
