@@ -7,3 +7,5 @@ Yii::setAlias('@console', dirname(dirname(__DIR__)) . '/console');
 defined('DB_INSERT') or define('DB_INSERT', 1);
 defined('DB_UPDATE') or define('DB_UPDATE', 2);
 defined('DB_DELETE') or define('DB_DELETE', 3);
+defined('OPERATION_CREATE') or define('OPERATION_CREATE', 'c');
+defined('OPERATION_UPDATE') or define('OPERATION_UPDATE', 'u');

@@ -33,12 +33,16 @@ class StudentController extends Controller
     {
         $model = new StudentForm();
         $selectedStudent = new StudentForm();
-        $groups = Group::findAllGroups();
+        $groups = Group::findAllNotClosedGroups();
         $students = Student::findStudents();
+        $documents = [];
         $dataProvider = new ActiveDataProvider([
             'query' => $students,
             'pagination' => [
                 'pageSize' => 20
+            ],
+            'sort' => [
+                'defaultOrder' => ['birthdate' => SORT_DESC],
             ]
         ]);
 
@@ -50,24 +54,29 @@ class StudentController extends Controller
 
         if (Yii::$app->request->isPjax && Yii::$app->request->get('idUS')) {
             $id = Yii::$app->request->get('idUS');
-            $selectedStudent->loadFromDB(Student::findStudent($id));
+            $documents = $selectedStudent->loadFromDB(Student::findStudent($id));
         }
 
-        if ($model->load(Yii::$app->request->post()) && Yii::$app->request->isAjax && Yii::$app->request->post('idUS')) {
-            if ($model->validate()) {
-                $model->updateStudent(Yii::$app->request->post('idUS'));
+        if ($selectedStudent->load(Yii::$app->request->post()) && Yii::$app->request->isAjax && Yii::$app->request->post('idUS')) {
+            if ($selectedStudent->validate()) {
+                $selectedStudent->updateStudent(Yii::$app->request->post('idUS'));
             }
         }
 
         if (Yii::$app->request->isAjax && Yii::$app->request->post('idDS')) {
+            Student::closeStudent(Yii::$app->request->post('idDS'));
+        }
 
+        if (Yii::$app->request->isAjax && Yii::$app->request->post('idAS')) {
+            Student::openStudent(Yii::$app->request->post('idAS'));
         }
 
         return $this->render('index', [
             'model' => $model,
             'groups' => $groups,
             'dataProvider' => $dataProvider,
-            'selectedStudent' => $selectedStudent
+            'selectedStudent' => $selectedStudent,
+            'documents' => $documents
         ]);
     }
 

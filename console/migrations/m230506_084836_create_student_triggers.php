@@ -40,7 +40,7 @@ DB
                     IF (old.closed_at IS NULL) THEN
                         INSERT INTO student_history VALUES (old.id, old.first_name, old.second_name, old.patronymic, old.sex, old.phone, old.payment, old.birthdate, old.created_at, old.closed_at, NOW(), 2);
                     ELSE
-                        INSERT INTO student_history VALUES (old.id, old.first_name, old.second_name, old.patronymic, old.sex, old.phone, old.payment, old.birthdate, old.created_at, old.closed_at, NOW(), 1);
+                        INSERT INTO student_history VALUES (old.id, old.first_name, old.second_name, old.patronymic, old.sex, old.phone, old.payment, old.birthdate, old.created_at, new.closed_at, NOW(), 1);
                     END IF;
                 ELSE 
                     INSERT INTO student_history VALUES (old.id, old.first_name, old.second_name, old.patronymic, old.sex, old.phone, old.payment, old.birthdate, old.created_at, new.closed_at, NOW(), 3);
