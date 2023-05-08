@@ -14,7 +14,9 @@ class m230506_082608_create_certificate_to_student_table extends Migration
     {
         $this->createTable('{{%certificate_to_student}}', [
             'certificate_id' => $this->integer()->notNull(),
-            'student_id' => $this->integer()->notNull()
+            'student_id' => $this->integer()->notNull(),
+            'created_at' => $this->date()->notNull(),
+            'closed_at' => $this->date()->null()
         ]);
 
         $this->addForeignKey(

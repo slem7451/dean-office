@@ -40,7 +40,7 @@ class FlowController extends Controller
                 'pageSize' => 10,
             ],
             'sort' => [
-                'defaultOrder' => ['name' => SORT_ASC],
+                'defaultOrder' => ['id' => SORT_DESC],
             ]
         ]);
 

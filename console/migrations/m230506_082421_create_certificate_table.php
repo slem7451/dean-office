@@ -15,8 +15,7 @@ class m230506_082421_create_certificate_table extends Migration
         $this->createTable('{{%certificate}}', [
             'id' => $this->primaryKey(),
             'template_id' => $this->string()->notNull(),
-            'created_at' => $this->date()->notNull(),
-            'closed_at' => $this->date()->null()
+            'created_at' => $this->date()->notNull()
         ]);
 
         $this->addForeignKey(

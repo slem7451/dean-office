@@ -95,4 +95,9 @@ class Student extends ActiveRecord
         $student->closed_at = new Expression('null');
         return $student->save();
     }
+
+    public static function findAllNotClosedStudents()
+    {
+        return self::find()->where(['is', 'closed_at', new Expression('null')])->all();
+    }
 }
