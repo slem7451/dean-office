@@ -9,6 +9,8 @@ use yii\db\ActiveRecord;
  *
  * @property integer $certificate_id
  * @property integer $student_id
+ * @property date $created_at
+ * @property date $closed_at
  */
 
 class CertificateToStudent extends ActiveRecord

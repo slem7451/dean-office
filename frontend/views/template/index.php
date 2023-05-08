@@ -105,7 +105,7 @@ $deleteIcon = '<svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fi
                     'content' => function ($model) use ($deleteIcon, $updateIcon) {
                         return '<div class="row none-margin">
                                     <button id="' . $model['template']['id'] . '%' . $model['type'] . '-update-template-id" class="update-template-btn action-btn" title="Редактировать">' . $updateIcon . '</button>' . '<p class="col-1"></p>' .
-                            '<button id="' . $model['template']['id'] . '%' . $model['type'] . '-delete-template-id" class="delete-template-btn action-btn" title="Отчислить">' . $deleteIcon . '</button>
+                            '<button id="' . $model['template']['id'] . '%' . $model['type'] . '-delete-template-id" class="delete-template-btn action-btn" title="Удалить">' . $deleteIcon . '</button>
                                 </div>';
                     }
                 ],
@@ -197,8 +197,6 @@ JS
 
 $this->registerJs(<<<JS
     $(document).on('click', '.template-row', function() {
-        var id = this.id.split('%')[0];
-        var type = this.id.split('%')[1].split('-')[0];
         var isButton = $('#btn-clicked').html();
         if (isButton == '%') {
             var idUT = this.id.split('%')[0];

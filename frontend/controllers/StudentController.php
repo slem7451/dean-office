@@ -42,7 +42,7 @@ class StudentController extends Controller
                 'pageSize' => 20
             ],
             'sort' => [
-                'defaultOrder' => ['birthdate' => SORT_DESC],
+                'defaultOrder' => ['id' => SORT_DESC],
             ]
         ]);
 

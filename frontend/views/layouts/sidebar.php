@@ -53,7 +53,7 @@
                         'icon' => 'file',
                         'items' => [
                             ['label' => 'Приказы', 'icon' => 'folder-open', 'url' => ['#']],
-                            ['label' => 'Справки', 'icon' => 'stamp', 'url' => ['#']],
+                            ['label' => 'Справки', 'icon' => 'stamp', 'url' => ['/certificate/index']],
                             ['label' => 'Шаблоны', 'icon' => 'clipboard-check', 'url' => ['/template/index']],
                         ]
                     ]

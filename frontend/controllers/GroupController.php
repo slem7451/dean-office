@@ -50,7 +50,7 @@ class GroupController extends Controller
                 'pageSize' => 10,
             ],
             'sort' => [
-                'defaultOrder' => ['name' => SORT_ASC],
+                'defaultOrder' => ['id' => SORT_DESC],
             ]
         ]);
 
@@ -126,7 +126,7 @@ class GroupController extends Controller
                 'pageSize' => 20,
             ],
             'sort' => [
-                'defaultOrder' => ['name' => SORT_ASC],
+                'defaultOrder' => ['id' => SORT_DESC],
             ]
         ]);
 
@@ -171,7 +171,7 @@ class GroupController extends Controller
                 'pageSize' => 20,
             ],
             'sort' => [
-                'defaultOrder' => ['name' => SORT_ASC],
+                'defaultOrder' => ['id' => SORT_DESC],
             ]
         ]);
 

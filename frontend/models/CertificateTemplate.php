@@ -33,4 +33,9 @@ class CertificateTemplate extends ActiveRecord
         $certificate = self::findOne(['id' => $id]);
         return $certificate->delete();
     }
+
+    public static function findAllCertificates()
+    {
+        return self::find()->all();
+    }
 }
