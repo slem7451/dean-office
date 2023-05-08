@@ -35,7 +35,7 @@ $closeIcon = '<svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fil
             'id' => 'group-modal',
             'toggleButton' => ['label' => 'Создать группу', 'class' => 'btn btn-primary mg-bottom-15px'],
             'title' => 'Создание группы',
-            'footer' => Html::submitButton('Создать', ['class' => 'btn btn-success save-group-btn']) . Html::button('Закрыть', [
+            'footer' => Html::submitButton('Создать', ['class' => 'btn btn-success mg-right-61-p']) . Html::button('Закрыть', [
                     'class' => 'btn btn-danger',
                     'data-dismiss' => 'modal'
                 ])
@@ -131,7 +131,7 @@ $form = ActiveForm::begin(['id' => 'update-group-form']);
 Modal::begin([
     'id' => 'update-group-modal',
     'title' => 'Редактирование группы',
-    'footer' => Html::submitButton('Сохранить', ['class' => 'btn btn-success update-group-btn-modal']) . Html::button('Закрыть', [
+    'footer' => Html::submitButton('Сохранить', ['class' => 'btn btn-success mg-right-58-p']) . Html::button('Закрыть', [
             'class' => 'btn btn-danger',
             'data-dismiss' => 'modal'
         ])

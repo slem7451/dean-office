@@ -15,7 +15,8 @@ class m230506_081944_create_decree_table extends Migration
         $this->createTable('{{%decree}}', [
             'id' => $this->primaryKey(),
             'template_id' => $this->string()->notNull(),
-            'created_at' => $this->date()->notNull()
+            'created_at' => $this->date()->notNull(),
+            'closed_at' => $this->date()->null()
         ]);
 
         $this->addForeignKey(
