@@ -53,9 +53,8 @@
                         'icon' => 'file',
                         'items' => [
                             ['label' => 'Приказы', 'icon' => 'folder-open', 'url' => ['#']],
-                            ['label' => 'Шаблоны приказов', 'icon' => 'folder', 'url' => ['#']],
                             ['label' => 'Справки', 'icon' => 'stamp', 'url' => ['#']],
-                            ['label' => 'Шаблоны справок', 'icon' => 'clipboard-check', 'url' => ['#']],
+                            ['label' => 'Шаблоны', 'icon' => 'clipboard-check', 'url' => ['/template/index']],
                         ]
                     ]
                 ],

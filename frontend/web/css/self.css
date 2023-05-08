@@ -71,3 +71,36 @@
     height: 100%;
     margin-bottom: 10px;
 }
+
+.question-btn {
+    display: contents;
+    color: #17a2b8;
+}
+
+.question-btn:hover {
+    color: darkcyan;
+}
+
+.resize-none {
+    resize: none !important;
+}
+
+.mg-right-61-p {
+    margin-right: 61%;
+}
+
+.mg-right-58-p {
+    margin-right: 58%;
+}
+
+.mg-right-76-p {
+    margin-right: 76%;
+}
+
+.mg-right-74-p {
+    margin-right: 74%;
+}
+
+.cursor-pointer {
+    cursor: pointer;
+}

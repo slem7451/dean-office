@@ -42,7 +42,7 @@ $addIcon = '<svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill=
             'toggleButton' => ['label' => 'Создать студента', 'class' => 'btn btn-primary mg-bottom-15px'],
             'size' => 'modal-lg',
             'title' => 'Создание студента',
-            'footer' => Html::submitButton('Создать', ['class' => 'btn btn-success save-student-btn']) . Html::button('Закрыть', [
+            'footer' => Html::submitButton('Создать', ['class' => 'btn btn-success mg-right-76-p']) . Html::button('Закрыть', [
                     'class' => 'btn btn-danger',
                     'data-dismiss' => 'modal'
                 ])
@@ -152,7 +152,7 @@ Modal::begin([
     'id' => 'update-student-modal',
     'title' => 'Редактирование студента',
     'size' => 'modal-lg',
-    'footer' => Html::submitButton('Сохранить', ['class' => 'btn btn-success update-student-btn-modal']) . Html::button('Закрыть', [
+    'footer' => Html::submitButton('Сохранить', ['class' => 'btn btn-success mg-right-74-p']) . Html::button('Закрыть', [
             'class' => 'btn btn-danger',
             'data-dismiss' => 'modal'
         ])

@@ -18,4 +18,19 @@ class CertificateTemplate extends ActiveRecord
     {
         return '{{%certificate_template}}';
     }
+
+    public static function findTemplate($id)
+    {
+        return self::findOne(['id' => $id]);
+    }
+
+    public static function deleteTemplate($id)
+    {
+        $certificate = Decree::findAll(['template_id' => $id]);
+        if (count($certificate)) {
+            return 0;
+        }
+        $certificate = self::findOne(['id' => $id]);
+        return $certificate->delete();
+    }
 }

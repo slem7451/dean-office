@@ -31,7 +31,7 @@ $closeIcon = '<svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fil
             'id' => 'academic-modal',
             'toggleButton' => ['label' => 'Добавить академическую степень', 'class' => 'btn btn-primary mg-bottom-15px'],
             'title' => 'Добавление академической степени',
-            'footer' => Html::submitButton('Создать', ['class' => 'btn btn-success save-student-btn']) . Html::button('Закрыть', [
+            'footer' => Html::submitButton('Создать', ['class' => 'btn btn-success mg-right-61-p']) . Html::button('Закрыть', [
                     'class' => 'btn btn-danger',
                     'data-dismiss' => 'modal'
                 ])
@@ -75,7 +75,7 @@ $form = ActiveForm::begin(['id' => 'update-academic-form']);
 Modal::begin([
     'id' => 'update-academic-modal',
     'title' => 'Редактирование академической степени',
-    'footer' => Html::submitButton('Сохранить', ['class' => 'btn btn-success update-student-btn-modal']) . Html::button('Закрыть', [
+    'footer' => Html::submitButton('Сохранить', ['class' => 'btn btn-success mg-right-58-p']) . Html::button('Закрыть', [
             'class' => 'btn btn-danger',
             'data-dismiss' => 'modal'
         ])
