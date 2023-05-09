@@ -22,73 +22,85 @@ $deleteIcon = '<svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fi
 </svg>';
 ?>
     <div class="decree-container">
-        <?php
-        $form = ActiveForm::begin(['id' => 'decree-form']);
-        Modal::begin([
-            'id' => 'decree-modal',
-            'toggleButton' => ['label' => 'Сделать приказ', 'class' => 'btn btn-primary mg-bottom-15px'],
-            'title' => 'Создание приказа',
-            'footer' => Html::submitButton('Создать', ['class' => 'btn btn-success mg-right-61-p']) . Html::button('Закрыть', [
-                    'class' => 'btn btn-danger',
-                    'data-dismiss' => 'modal'
-                ])
-        ]);
-        echo $this->render('_decree-form-modal', [
-            'model' => $model,
-            'form' => $form,
-            'operation' => OPERATION_CREATE,
-            'templates' => $templates,
-            'students' => $students,
-            'view' => false
-        ]);
-        Modal::end();
-        ActiveForm::end();
-        ?>
-        <?php Pjax::begin(['id' => 'decree-table-pjax']); ?>
-        <?= GridView::widget([
-            'dataProvider' => $dataProvider,
-            'tableOptions' => ['class' => 'table table-bordered table-hover dataTable dtr-inline'],
-            'layout' => "{items}\n{pager}",
-            'rowOptions' => function ($model, $key, $index, $grid) {
-                return ['class' => 'decree-row cursor-pointer', 'id' => $model->id . '-decree-id', 'title' => 'Посмотреть подробно'];
-            },
-            'columns' => [
-                [
-                    'header' => 'Номер шаблона',
-                    'content' => function ($model) {
-                        return $model->template_id;
-                    }
-                ],
-                [
-                    'header' => 'Название шаблона',
-                    'content' => function ($model) {
-                        return $model->template->name;
-                    }
-                ],
-                [
-                    'header' => 'Дата приказа',
-                    'content' => function ($model) {
-                        return $model->created_at;
-                    }
-                ],
-                [
-                    'header' => 'Кол-во студентов',
-                    'content' => function ($model) {
-                        return count($model->students);
-                    }
-                ],
-                [
-                    'header' => 'Действия',
-                    'content' => function ($model) use ($deleteIcon, $updateIcon) {
-                        return '<div class="row none-margin">
+        <div class="card card-outline card-primary">
+            <div class="card-header">
+                <div class="card-title">
+                    <?php
+                    $form = ActiveForm::begin(['id' => 'decree-form']);
+                    Modal::begin([
+                        'id' => 'decree-modal',
+                        'toggleButton' => ['label' => 'Сделать приказ', 'class' => 'btn btn-primary'],
+                        'title' => 'Создание приказа',
+                        'footer' => Html::submitButton('Создать', ['class' => 'btn btn-success mg-right-61-p']) . Html::button('Закрыть', [
+                                'class' => 'btn btn-danger',
+                                'data-dismiss' => 'modal'
+                            ])
+                    ]);
+                    echo $this->render('_decree-form-modal', [
+                        'model' => $model,
+                        'form' => $form,
+                        'operation' => OPERATION_CREATE,
+                        'templates' => $templates,
+                        'students' => $students,
+                        'view' => false
+                    ]);
+                    Modal::end();
+                    ActiveForm::end();
+                    ?>
+                </div>
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                <?php Pjax::begin(['id' => 'decree-table-pjax']); ?>
+                <?= GridView::widget([
+                    'dataProvider' => $dataProvider,
+                    'tableOptions' => ['class' => 'table table-bordered table-hover dataTable dtr-inline'],
+                    'layout' => "{items}\n{pager}",
+                    'rowOptions' => function ($model, $key, $index, $grid) {
+                        return ['class' => 'decree-row cursor-pointer', 'id' => $model->id . '-decree-id', 'title' => 'Посмотреть подробно'];
+                    },
+                    'columns' => [
+                        [
+                            'header' => 'Номер шаблона',
+                            'content' => function ($model) {
+                                return $model->template_id;
+                            }
+                        ],
+                        [
+                            'header' => 'Название шаблона',
+                            'content' => function ($model) {
+                                return $model->template->name;
+                            }
+                        ],
+                        [
+                            'header' => 'Дата приказа',
+                            'content' => function ($model) {
+                                return $model->created_at;
+                            }
+                        ],
+                        [
+                            'header' => 'Кол-во студентов',
+                            'content' => function ($model) {
+                                return count($model->students);
+                            }
+                        ],
+                        [
+                            'header' => 'Действия',
+                            'content' => function ($model) use ($deleteIcon, $updateIcon) {
+                                return '<div class="row none-margin">
                                     <button id="' . $model->id . '-update-decree-id" class="update-decree-btn action-btn" title="Редактировать">' . $updateIcon . '</button>' . '<p class="col-1"></p>' .
-                            '<button id="' . $model->id . '-delete-decree-id" class="delete-decree-btn action-btn" title="Удалить">' . $deleteIcon . '</button>
+                                    '<button id="' . $model->id . '-delete-decree-id" class="delete-decree-btn action-btn" title="Удалить">' . $deleteIcon . '</button>
                                 </div>';
-                    }
-                ],
-            ]
-        ]); ?>
-        <?php Pjax::end(); ?>
+                            }
+                        ],
+                    ]
+                ]); ?>
+                <?php Pjax::end(); ?>
+            </div>
+        </div>
     </div>
     <div id="btn-clicked" class="none-display">0</div>
 <?php

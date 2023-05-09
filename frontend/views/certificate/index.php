@@ -3,6 +3,7 @@
 /** @var \frontend\models\CertificateForm $selectedCertificate */
 /** @var \frontend\models\CertificateTemplate $templates */
 /** @var \frontend\models\Student $students */
+
 /** @var \yii\data\ActiveDataProvider $dataProvider */
 
 use yii\bootstrap4\Modal;
@@ -21,75 +22,87 @@ $deleteIcon = '<svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fi
   <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293 5.354 4.646z"/>
 </svg>';
 ?>
-<div class="certificate-container">
-    <?php
-        $form = ActiveForm::begin(['id' => 'certificate-form']);
-        Modal::begin([
-            'id' => 'certificate-modal',
-            'toggleButton' => ['label' => 'Сделать справку', 'class' => 'btn btn-primary mg-bottom-15px'],
-            'title' => 'Создание справки',
-            'footer' => Html::submitButton('Создать', ['class' => 'btn btn-success mg-right-61-p']) . Html::button('Закрыть', [
-                    'class' => 'btn btn-danger',
-                    'data-dismiss' => 'modal'
-                ])
-        ]);
-        echo $this->render('_certificate-form-modal', [
-            'model' => $model,
-            'form' => $form,
-            'operation' => OPERATION_CREATE,
-            'templates' => $templates,
-            'students' => $students,
-            'view' => false
-        ]);
-        Modal::end();
-        ActiveForm::end();
-        ?>
-    <?php Pjax::begin(['id' => 'certificate-table-pjax']); ?>
-    <?= GridView::widget([
-        'dataProvider' => $dataProvider,
-        'tableOptions' => ['class' => 'table table-bordered table-hover dataTable dtr-inline'],
-        'layout' => "{items}\n{pager}",
-        'rowOptions' => function ($model, $key, $index, $grid) {
-            return ['class' => 'certificate-row cursor-pointer', 'id' => $model->id . '-certificate-id', 'title' => 'Посмотреть подробно'];
-        },
-        'columns' => [
-            [
-                'header' => 'Номер шаблона',
-                'content' => function ($model) {
-                    return $model->template_id;
-                }
-            ],
-            [
-                'header' => 'Название шаблона',
-                'content' => function ($model) {
-                    return $model->template->name;
-                }
-            ],
-            [
-                'header' => 'Дата справки',
-                'content' => function ($model) {
-                    return $model->created_at;
-                }
-            ],
-            [
-                'header' => 'Кол-во студентов',
-                'content' => function ($model) {
-                    return count($model->students);
-                }
-            ],
-            [
-                'header' => 'Действия',
-                'content' => function ($model) use ($deleteIcon, $updateIcon) {
-                    return '<div class="row none-margin">
+    <div class="certificate-container">
+        <div class="card card-outline card-primary">
+            <div class="card-header">
+                <div class="card-title">
+                    <?php
+                    $form = ActiveForm::begin(['id' => 'certificate-form']);
+                    Modal::begin([
+                        'id' => 'certificate-modal',
+                        'toggleButton' => ['label' => 'Сделать справку', 'class' => 'btn btn-primary'],
+                        'title' => 'Создание справки',
+                        'footer' => Html::submitButton('Создать', ['class' => 'btn btn-success mg-right-61-p']) . Html::button('Закрыть', [
+                                'class' => 'btn btn-danger',
+                                'data-dismiss' => 'modal'
+                            ])
+                    ]);
+                    echo $this->render('_certificate-form-modal', [
+                        'model' => $model,
+                        'form' => $form,
+                        'operation' => OPERATION_CREATE,
+                        'templates' => $templates,
+                        'students' => $students,
+                        'view' => false
+                    ]);
+                    Modal::end();
+                    ActiveForm::end();
+                    ?>
+                </div>
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                <?php Pjax::begin(['id' => 'certificate-table-pjax']); ?>
+                <?= GridView::widget([
+                    'dataProvider' => $dataProvider,
+                    'tableOptions' => ['class' => 'table table-bordered table-hover dataTable dtr-inline'],
+                    'layout' => "{items}\n{pager}",
+                    'rowOptions' => function ($model, $key, $index, $grid) {
+                        return ['class' => 'certificate-row cursor-pointer', 'id' => $model->id . '-certificate-id', 'title' => 'Посмотреть подробно'];
+                    },
+                    'columns' => [
+                        [
+                            'header' => 'Номер шаблона',
+                            'content' => function ($model) {
+                                return $model->template_id;
+                            }
+                        ],
+                        [
+                            'header' => 'Название шаблона',
+                            'content' => function ($model) {
+                                return $model->template->name;
+                            }
+                        ],
+                        [
+                            'header' => 'Дата справки',
+                            'content' => function ($model) {
+                                return $model->created_at;
+                            }
+                        ],
+                        [
+                            'header' => 'Кол-во студентов',
+                            'content' => function ($model) {
+                                return count($model->students);
+                            }
+                        ],
+                        [
+                            'header' => 'Действия',
+                            'content' => function ($model) use ($deleteIcon, $updateIcon) {
+                                return '<div class="row none-margin">
                                     <button id="' . $model->id . '-update-certificate-id" class="update-certificate-btn action-btn" title="Редактировать">' . $updateIcon . '</button>' . '<p class="col-1"></p>' .
-                        '<button id="' . $model->id . '-delete-certificate-id" class="delete-certificate-btn action-btn" title="Удалить">' . $deleteIcon . '</button>
+                                    '<button id="' . $model->id . '-delete-certificate-id" class="delete-certificate-btn action-btn" title="Удалить">' . $deleteIcon . '</button>
                                 </div>';
-                }
-            ],
-        ]
-    ]); ?>
-    <?php Pjax::end(); ?>
-</div>
+                            }
+                        ],
+                    ]
+                ]); ?>
+                <?php Pjax::end(); ?>
+            </div>
+        </div>
+    </div>
     <div id="btn-clicked" class="none-display">0</div>
 <?php
 Pjax::begin(['id' => 'update-certificate-pjax']);
@@ -121,9 +134,9 @@ Modal::begin([
     'id' => 'view-certificate-modal',
     'title' => 'Просмотр справки',
     'footer' => Html::button('Закрыть', [
-            'class' => 'btn btn-danger',
-            'data-dismiss' => 'modal'
-        ])
+        'class' => 'btn btn-danger',
+        'data-dismiss' => 'modal'
+    ])
 ]);
 echo $this->render('_certificate-form-modal', [
     'model' => $selectedCertificate,

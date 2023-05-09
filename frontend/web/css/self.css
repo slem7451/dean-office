@@ -104,3 +104,7 @@
 .cursor-pointer {
     cursor: pointer;
 }
+
+.mg-right-20-px {
+    margin-right: 20px;
+}
