@@ -2,8 +2,12 @@
 
 namespace frontend\controllers;
 
+use frontend\models\AcademicDegree;
+use frontend\models\Direction;
 use frontend\models\Flow;
 use frontend\models\FlowForm;
+use frontend\models\Group;
+use frontend\models\GroupForm;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
@@ -69,6 +73,39 @@ class FlowController extends Controller
             'model' => $model,
             'dataProvider' => $dataProvider,
             'selectedFlow' => $selectedFlow
+        ]);
+    }
+
+    public function actionView($id)
+    {
+        $selectedGroup = new GroupForm();
+        $flow = Flow::findFlow($id);
+        $groups = Group::findFlowsGroups($id);
+        $directions = Direction::findAllDirections();
+        $academicDegrees = AcademicDegree::findAllAcademicDegrees();
+        $flows = Flow::findAllNotClosedFlows();
+        $dataProvider = new ActiveDataProvider([
+            'query' => $groups,
+            'pagination' => [
+                'pageSize' => 10,
+            ],
+            'sort' => [
+                'defaultOrder' => ['id' => SORT_DESC],
+            ]
+        ]);
+
+        if (Yii::$app->request->isPjax && Yii::$app->request->get('idUG')) {
+            $id = Yii::$app->request->get('idUG');
+            $selectedGroup->loadFromDB(Group::findGroup($id));
+        }
+
+        return $this->render('view', [
+            'dataProvider' => $dataProvider,
+            'selectedGroup' => $selectedGroup,
+            'directions' => $directions,
+            'academicDegrees' => $academicDegrees,
+            'flows' => $flows,
+            'flow' => $flow
         ]);
     }
 }

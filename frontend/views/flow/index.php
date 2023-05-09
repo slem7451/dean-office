@@ -27,76 +27,94 @@ $closeIcon = '<svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fil
 ?>
 
     <div class="flow-container">
-        <?php
-        $form = ActiveForm::begin(['id' => 'flow-form']);
-        Modal::begin([
-            'id' => 'flow-modal',
-            'toggleButton' => ['label' => 'Создать поток', 'class' => 'btn btn-primary mg-bottom-15px'],
-            'title' => 'Создание потока',
-            'footer' => Html::submitButton('Создать', ['class' => 'btn btn-success mg-right-61-p']) . Html::button('Закрыть', [
-                    'class' => 'btn btn-danger',
-                    'data-dismiss' => 'modal'
-                ])
-        ]);
-        echo $this->render('_flow-form-modal', [
-            'form' => $form,
-            'model' => $model,
-            'operation' => OPERATION_CREATE
-        ]);
-        Modal::end();
-        ActiveForm::end();
-        Pjax::begin(['id' => 'flow-table-pjax']);
-        echo GridView::widget([
-            'dataProvider' => $dataProvider,
-            'layout' => "{items}\n{pager}",
-            'columns' => [
-                [
-                    'header' => 'Название',
-                    'content' => function ($model) {
-                        return $model->name;
-                    }
-                ],
-                [
-                    'header' => 'Кол-во групп',
-                    'content' => function ($model) {
-                        return count($model->groups);
-                    }
-                ],
-                [
-                    'header' => 'Дата поступления',
-                    'content' => function ($model) {
-                        return DateHelper::normalizeDate($model->created_at);
-                    }
-                ],
-                [
-                    'header' => 'Дата окончания',
-                    'content' => function ($model) {
-                        return $model->closed_at ? DateHelper::normalizeDate($model->closed_at) : '';
-                    }
-                ],
-                [
-                    'header' => 'Статус',
-                    'content' => function ($model) {
-                        return $model->closed_at ? 'Выпущен' : 'На обучении';
-                    }
-                ],
-                [
-                    'header' => 'Действия',
-                    'content' => function ($model) use ($updateIcon, $updateGroupsIcon, $closeIcon) {
-                        if ($model->closed_at) {
-                            return '';
-                        }
-                        return '<div class="row none-margin">
+        <div class="card card-outline card-primary">
+            <div class="card-header">
+                <div class="card-title">
+                    <?php
+                    $form = ActiveForm::begin(['id' => 'flow-form']);
+                    Modal::begin([
+                        'id' => 'flow-modal',
+                        'toggleButton' => ['label' => 'Создать поток', 'class' => 'btn btn-primary'],
+                        'title' => 'Создание потока',
+                        'footer' => Html::submitButton('Создать', ['class' => 'btn btn-success mg-right-61-p']) . Html::button('Закрыть', [
+                                'class' => 'btn btn-danger',
+                                'data-dismiss' => 'modal'
+                            ])
+                    ]);
+                    echo $this->render('_flow-form-modal', [
+                        'form' => $form,
+                        'model' => $model,
+                        'operation' => OPERATION_CREATE
+                    ]);
+                    Modal::end();
+                    ActiveForm::end();
+                    ?>
+                </div>
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                <?php
+                Pjax::begin(['id' => 'flow-table-pjax']);
+                echo GridView::widget([
+                    'dataProvider' => $dataProvider,
+                    'tableOptions' => ['class' => 'table table-bordered table-hover dataTable dtr-inline'],
+                    'layout' => "{items}\n{pager}",
+                    'rowOptions' => function ($model, $key, $index, $grid) {
+                        return ['class' => 'flow-row cursor-pointer', 'id' => $model->id . '-' . 'flow-id', 'title' => 'Посмотреть подробно'];
+                    },
+                    'columns' => [
+                        [
+                            'header' => 'Название',
+                            'content' => function ($model) {
+                                return $model->name;
+                            }
+                        ],
+                        [
+                            'header' => 'Кол-во групп',
+                            'content' => function ($model) {
+                                return count($model->groups);
+                            }
+                        ],
+                        [
+                            'header' => 'Дата поступления',
+                            'content' => function ($model) {
+                                return DateHelper::normalizeDate($model->created_at);
+                            }
+                        ],
+                        [
+                            'header' => 'Дата окончания',
+                            'content' => function ($model) {
+                                return $model->closed_at ? DateHelper::normalizeDate($model->closed_at) : '';
+                            }
+                        ],
+                        [
+                            'header' => 'Статус',
+                            'content' => function ($model) {
+                                return $model->closed_at ? 'Выпущен' : 'На обучении';
+                            }
+                        ],
+                        [
+                            'header' => 'Действия',
+                            'content' => function ($model) use ($updateIcon, $updateGroupsIcon, $closeIcon) {
+                                if ($model->closed_at) {
+                                    return '';
+                                }
+                                return '<div class="row none-margin">
                                     <button id="' . $model->id . '-update-flow-id" class="update-flow-btn action-btn" title="Редактировать">' . $updateIcon . '</button>' . '<p class="col-1"></p>' .
-                            //'<button id="' . $model->id . '-update-flow-groups-id" class="update-flow-groups-btn action-btn" title="Убрать/добавить группы">' . $updateGroupsIcon . '</button>'  . '<p class="col-1"></p>' .
-                            '<button id="' . $model->id . '-close-flow-id" class="close-flow-btn action-btn" title="Выпустить поток">' . $closeIcon . '</button>
+                                    //'<button id="' . $model->id . '-update-flow-groups-id" class="update-flow-groups-btn action-btn" title="Убрать/добавить группы">' . $updateGroupsIcon . '</button>'  . '<p class="col-1"></p>' .
+                                    '<button id="' . $model->id . '-close-flow-id" class="close-flow-btn action-btn" title="Выпустить поток">' . $closeIcon . '</button>
                                 </div>';
-                    }
-                ],
-            ]
-        ]);
-        Pjax::end();
-        ?>
+                            }
+                        ],
+                    ]
+                ]);
+                Pjax::end();
+                ?>
+            </div>
+        </div>
     </div>
     <div id="btn-clicked" class="none-display">0</div>
 <?php
@@ -194,6 +212,7 @@ JS
 
 $this->registerJs(<<<JS
     $(document).on('click', '.close-flow-btn', function() {
+        $('#btn-clicked').html('1');
         if (confirm('Вы уверены, что хотите выпустить данный поток?')) {
             var idCF = this.id.split('-')[0];
             $.ajax({
@@ -204,6 +223,19 @@ $this->registerJs(<<<JS
                     $.pjax.reload({container: '#flow-table-pjax', replace: false});
                 }
             });
+        } else {
+            $.pjax.reload({container: '#flow-table-pjax', replace: false});
+        }
+    })
+JS
+);
+
+$this->registerJs(<<<JS
+    $(document).on('click', '.flow-row', function() {
+        var id = this.id.split('-')[0];
+        var isButton = $('#btn-clicked').html();
+        if (isButton == '0') {
+            window.location.href = 'http://localhost:20080/index.php?r=flow%2Fview&id=' + id;
         }
     })
 JS

@@ -79,4 +79,12 @@ class Group extends ActiveRecord
     {
         return self::find()->where(['is', 'closed_at', new Expression('null')])->all();
     }
+
+    public static function findFlowsGroups($id)
+    {
+        return self::find()
+            ->leftJoin('group_to_flow', 'public.group.id = group_to_flow.group_id')
+            ->leftJoin('flow', 'flow.id = group_to_flow.flow_id')
+            ->where(['group_to_flow.flow_id' => $id]);
+    }
 }

@@ -149,6 +149,7 @@ class StudentForm extends Model
                 $studentToGroup = new StudentToGroup();
                 $studentToGroup->group_id = $this->group;
                 $studentToGroup->student_id = $student->id;
+                $studentToGroup->created_at = new Expression('NOW()');
                 $success *= $studentToGroup->save();
             }
 

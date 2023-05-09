@@ -91,7 +91,7 @@ class GroupController extends Controller
         $students = Student::findStudentsByGroupId($group->id);
         $allStudents = Student::findStudentsNotInGroup($group->id);
         $selectedStudent = new StudentForm();
-        $groups = Group::findAllGroups();
+        $groups = Group::findAllNotClosedGroups();
         $documents = [];
 
         if (Yii::$app->request->isPjax && Yii::$app->request->get('idUS')) {
