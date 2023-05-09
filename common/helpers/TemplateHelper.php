@@ -22,8 +22,8 @@ class TemplateHelper
         $template = str_replace('$DIR$', '02.03.02', $template);
         $template = str_replace('$DIR_N$', 'Фундаментальная информатика и информационные технологии', $template);
         $template = str_replace('$PAY$', self::BUDGET_PAY, $template);
-        $template = str_replace('$DATE_B$', date('d.m.Y'), $template);
-        $template = str_replace('$DATE_E$', date('d.m.Y', strtotime('+ 1 month')), $template);
+        $template = str_replace('$DATE_B$', date('d.m.Y') . ' г.', $template);
+        $template = str_replace('$DATE_E$', date('d.m.Y', strtotime('+ 1 month')) . ' г.', $template);
         return $template;
     }
 }

@@ -53,4 +53,9 @@ class DecreeTemplate extends ActiveRecord
         $decree = self::findOne(['id' => $id]);
         return $decree->delete();
     }
+
+    public static function findAllDecrees()
+    {
+        return self::find()->all();
+    }
 }
