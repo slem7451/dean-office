@@ -100,4 +100,14 @@ class Student extends ActiveRecord
     {
         return self::find()->where(['is', 'closed_at', new Expression('null')])->all();
     }
+
+    public static function findStudentsInFlow($id)
+    {
+        return self::find()
+            ->leftJoin('student_to_group', 'student.id = student_to_group.student_id')
+            ->leftJoin('group_to_flow', 'group_to_flow.group_id = student_to_group.group_id')
+            ->where(['group_to_flow.flow_id' => $id])
+            ->andWhere(['is', 'student.closed_at', new Expression('null')])
+            ->all();
+    }
 }

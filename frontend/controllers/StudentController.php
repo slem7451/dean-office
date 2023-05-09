@@ -3,6 +3,8 @@
 namespace frontend\controllers;
 
 use frontend\models\CertificateToStudent;
+use frontend\models\CloseStudentForm;
+use frontend\models\DecreeTemplate;
 use frontend\models\DecreeToStudent;
 use frontend\models\DocumentForm;
 use frontend\models\DocumentToStudent;
@@ -38,7 +40,9 @@ class StudentController extends Controller
     public function actionIndex()
     {
         $model = new StudentForm();
+        $closeStudentForm = new CloseStudentForm();
         $selectedStudent = new StudentForm();
+        $decrees = DecreeTemplate::findAllDecrees();
         $groups = Group::findAllNotClosedGroups();
         $students = Student::findStudents();
         $documents = [];
@@ -55,6 +59,18 @@ class StudentController extends Controller
         if ($model->load(Yii::$app->request->post()) && Yii::$app->request->isAjax && !Yii::$app->request->post('idUS')) {
             if ($model->validate()) {
                 $model->saveStudent();
+            }
+        }
+
+        if ($closeStudentForm->load(Yii::$app->request->post()) && Yii::$app->request->isAjax && Yii::$app->request->post('idDS')) {
+            if ($closeStudentForm->validate()) {
+                $closeStudentForm->closeStudent(Yii::$app->request->post('idDS'));
+            }
+        }
+
+        if ($closeStudentForm->load(Yii::$app->request->post()) && Yii::$app->request->isAjax && Yii::$app->request->post('idAS')) {
+            if ($closeStudentForm->validate()) {
+                $closeStudentForm->openStudent(Yii::$app->request->post('idAS'));
             }
         }
 
@@ -82,7 +98,9 @@ class StudentController extends Controller
             'groups' => $groups,
             'dataProvider' => $dataProvider,
             'selectedStudent' => $selectedStudent,
-            'documents' => $documents
+            'documents' => $documents,
+            'closeStudentForm' => $closeStudentForm,
+            'decrees' => $decrees
         ]);
     }
 
