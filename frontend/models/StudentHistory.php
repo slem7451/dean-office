@@ -27,4 +27,9 @@ class StudentHistory extends ActiveRecord
     {
         return '{{%student_history}}';
     }
+
+    public static function findHistory($id)
+    {
+        return self::find()->where(['id' => $id]);
+    }
 }

@@ -17,4 +17,25 @@ class DocumentToStudent extends ActiveRecord
     {
         return '{{%document_to_student}}';
     }
+
+    public static function primaryKey()
+    {
+        return ['student_id', 'document_id'];
+    }
+
+    public static function findDoucments($id)
+    {
+        $documents = [];
+        $documentToStudents = self::findAll(['student_id' => $id]);
+        foreach ($documentToStudents as $documentToStudent) {
+            $documents[] = Document::findOne(['id' => $documentToStudent->document_id]);
+        }
+        return $documents;
+    }
+
+    public static function deleteDocument($student_id, $document_id)
+    {
+        $documentToStudent = DocumentToStudent::findOne(['student_id' => $student_id, 'document_id' => $document_id]);
+        return $documentToStudent->delete();
+    }
 }

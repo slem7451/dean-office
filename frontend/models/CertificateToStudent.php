@@ -19,4 +19,18 @@ class CertificateToStudent extends ActiveRecord
     {
         return '{{%certificate_to_student}}';
     }
+
+    public static function findCertificates($id)
+    {
+        $certificates = [];
+        $certificateToStudents = self::findAll(['student_id' => $id]);
+        foreach ($certificateToStudents as $certificateToStudent) {
+            $certificate = Certificate::findOne(['id' => $certificateToStudent->certificate_id]);
+            $certificates[] = [
+                'certificateToStudent' => $certificateToStudent,
+                'certificate' => $certificate
+            ];
+        }
+        return $certificates;
+    }
 }

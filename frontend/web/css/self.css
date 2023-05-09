@@ -108,3 +108,15 @@
 .mg-right-20-px {
     margin-right: 20px;
 }
+
+.width-25-p {
+    width: 25% !important;
+}
+
+.mg-right-75-p {
+    margin-right: 75%;
+}
+
+.mg-right-15-px {
+    margin-right: 15px;
+}
