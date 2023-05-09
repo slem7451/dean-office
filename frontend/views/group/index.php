@@ -29,100 +29,114 @@ $closeIcon = '<svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fil
 ?>
 
     <div class="group-container">
-        <?php
-        $form = ActiveForm::begin(['id' => 'group-form']);
-        Modal::begin([
-            'id' => 'group-modal',
-            'toggleButton' => ['label' => 'Создать группу', 'class' => 'btn btn-primary mg-bottom-15px'],
-            'title' => 'Создание группы',
-            'footer' => Html::submitButton('Создать', ['class' => 'btn btn-success mg-right-61-p']) . Html::button('Закрыть', [
-                    'class' => 'btn btn-danger',
-                    'data-dismiss' => 'modal'
-                ])
-        ]);
-        echo $this->render('_group-form-modal', [
-            'form' => $form,
-            'model' => $model,
-            'operation' => OPERATION_CREATE,
-            'directions' => $directions,
-            'academicDegrees' => $academicDegrees,
-            'flows' => $flows
-        ]);
-        Modal::end();
-        ActiveForm::end();
-        Pjax::begin(['id' => 'group-table-pjax']);
-        echo GridView::widget([
-            'dataProvider' => $dataProvider,
-            'tableOptions' => ['class' => 'table table-bordered table-hover dataTable dtr-inline'],
-            'layout' => "{items}\n{pager}",
-            'rowOptions' => function ($model, $key, $index, $grid) {
-                return ['class' => 'group-row', 'id' => $model->id . '-' . 'group-id', 'title' => 'Посмотреть подробно'];
-            },
-            'columns' => [
-                [
-                    'header' => 'Название',
-                    'content' => function ($model) {
-                        return $model->name;
-                    }
-                ],
-                [
-                    'header' => 'Поток',
-                    'content' => function ($model) {
-                        return $model->flow->name;
-                    }
-                ],
-                [
-                    'header' => 'Кол-во студентов',
-                    'content' => function ($model) {
-                        return count($model->students);
-                    }
-                ],
-                [
-                    'header' => 'Направление',
-                    'content' => function ($model) {
-                        return $model->direction->name;
-                    }
-                ],
-                [
-                    'header' => 'Академическая степень',
-                    'content' => function ($model) {
-                        return $model->academicDegree->name;
-                    }
-                ],
-                [
-                    'header' => 'Дата начала',
-                    'content' => function ($model) {
-                        return date('d.m.Y', strtotime($model->created_at));
-                    }
-                ],
-                [
-                    'header' => 'Дата окончания',
-                    'content' => function ($model) {
-                        return $model->closed_at ? date('d.m.Y', strtotime($model->closed_at)) : '';
-                    }
-                ],
-                [
-                    'header' => 'Статус',
-                    'content' => function ($model) {
-                        return $model->closed_at ? 'Закрыта' : 'На обучении';
-                    }
-                ],
-                [
-                    'header' => 'Действия',
-                    'content' => function ($model) use ($updateIcon, $closeIcon) {
-                        if ($model->closed_at) {
-                            return '';
-                        }
-                        return '<div class="row none-margin">
+        <div class="card card-outline card-primary">
+            <div class="card-header">
+                <div class="card-title">
+                    <?php
+                    $form = ActiveForm::begin(['id' => 'group-form']);
+                    Modal::begin([
+                        'id' => 'group-modal',
+                        'toggleButton' => ['label' => 'Создать группу', 'class' => 'btn btn-primary'],
+                        'title' => 'Создание группы',
+                        'footer' => Html::submitButton('Создать', ['class' => 'btn btn-success mg-right-61-p']) . Html::button('Закрыть', [
+                                'class' => 'btn btn-danger',
+                                'data-dismiss' => 'modal'
+                            ])
+                    ]);
+                    echo $this->render('_group-form-modal', [
+                        'form' => $form,
+                        'model' => $model,
+                        'operation' => OPERATION_CREATE,
+                        'directions' => $directions,
+                        'academicDegrees' => $academicDegrees,
+                        'flows' => $flows
+                    ]);
+                    Modal::end();
+                    ActiveForm::end();
+                    ?>
+                </div>
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                <?php
+                Pjax::begin(['id' => 'group-table-pjax']);
+                echo GridView::widget([
+                    'dataProvider' => $dataProvider,
+                    'tableOptions' => ['class' => 'table table-bordered table-hover dataTable dtr-inline'],
+                    'layout' => "{items}\n{pager}",
+                    'rowOptions' => function ($model, $key, $index, $grid) {
+                        return ['class' => 'group-row', 'id' => $model->id . '-' . 'group-id', 'title' => 'Посмотреть подробно'];
+                    },
+                    'columns' => [
+                        [
+                            'header' => 'Название',
+                            'content' => function ($model) {
+                                return $model->name;
+                            }
+                        ],
+                        [
+                            'header' => 'Поток',
+                            'content' => function ($model) {
+                                return $model->flow->name;
+                            }
+                        ],
+                        [
+                            'header' => 'Кол-во студентов',
+                            'content' => function ($model) {
+                                return count($model->students);
+                            }
+                        ],
+                        [
+                            'header' => 'Направление',
+                            'content' => function ($model) {
+                                return $model->direction->name;
+                            }
+                        ],
+                        [
+                            'header' => 'Академическая степень',
+                            'content' => function ($model) {
+                                return $model->academicDegree->name;
+                            }
+                        ],
+                        [
+                            'header' => 'Дата начала',
+                            'content' => function ($model) {
+                                return date('d.m.Y', strtotime($model->created_at));
+                            }
+                        ],
+                        [
+                            'header' => 'Дата окончания',
+                            'content' => function ($model) {
+                                return $model->closed_at ? date('d.m.Y', strtotime($model->closed_at)) : '';
+                            }
+                        ],
+                        [
+                            'header' => 'Статус',
+                            'content' => function ($model) {
+                                return $model->closed_at ? 'Закрыта' : 'На обучении';
+                            }
+                        ],
+                        [
+                            'header' => 'Действия',
+                            'content' => function ($model) use ($updateIcon, $closeIcon) {
+                                if ($model->closed_at) {
+                                    return '';
+                                }
+                                return '<div class="row none-margin">
                                     <button id="' . $model->id . '-update-group-id" class="update-group-btn action-btn" title="Редактировать">' . $updateIcon . '</button>' . '<p class="width-1-p"></p>' .
                                     '<button id="' . $model->id . '-close-group-id" class="close-group-btn action-btn" title="Закрыть">' . $closeIcon . '</button>' .
-                                '</div>';
-                    }
-                ],
-            ]
-        ]);
-        Pjax::end();
-        ?>
+                                    '</div>';
+                            }
+                        ],
+                    ]
+                ]);
+                Pjax::end();
+                ?>
+            </div>
+        </div>
     </div>
     <div id="btn-clicked" class="none-display">0</div>
 <?php

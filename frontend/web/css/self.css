@@ -35,10 +35,6 @@
     margin: 0;
 }
 
-.update-student-btn-modal {
-    margin-right: 74%;
-}
-
 .group-row {
     cursor: pointer;
 }
@@ -119,4 +115,8 @@
 
 .mg-right-15-px {
     margin-right: 15px;
+}
+
+.width-2-p {
+    width: 2%;
 }

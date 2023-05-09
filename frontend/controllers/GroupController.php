@@ -92,10 +92,11 @@ class GroupController extends Controller
         $allStudents = Student::findStudentsNotInGroup($group->id);
         $selectedStudent = new StudentForm();
         $groups = Group::findAllGroups();
+        $documents = [];
 
         if (Yii::$app->request->isPjax && Yii::$app->request->get('idUS')) {
             $id = Yii::$app->request->get('idUS');
-            $selectedStudent->loadFromDB(Student::findStudent($id));
+            $documents = $selectedStudent->loadFromDB(Student::findStudent($id));
         }
 
         if(Yii::$app->request->isAjax && Yii::$app->request->post('students')) {
@@ -103,7 +104,10 @@ class GroupController extends Controller
         }
 
         $studentsDataProvider = new ActiveDataProvider([
-            'query' => $students
+            'query' => $students,
+            'sort' => [
+                'defaultOrder' => ['id' => SORT_DESC],
+            ]
         ]);
 
         return $this->render('view', [
@@ -111,7 +115,8 @@ class GroupController extends Controller
             'groups' => $groups,
             'selectedStudent' => $selectedStudent,
             'studentsDataProvider' => $studentsDataProvider,
-            'allStudents' => $allStudents
+            'allStudents' => $allStudents,
+            'documents' => $documents
         ]);
     }
 

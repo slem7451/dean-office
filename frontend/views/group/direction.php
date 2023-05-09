@@ -76,7 +76,7 @@ $closeIcon = '<svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fil
                             'header' => 'Действия',
                             'content' => function ($model) use ($updateIcon, $closeIcon) {
                                 return '<div class="row none-margin">
-                                    <button id="' . $model->id . '-update-direction-id" class="update-direction-btn action-btn" title="Редактировать">' . $updateIcon . '</button>' . '<p class="width-1-p"></p>' .
+                                    <button id="' . $model->id . '-update-direction-id" class="update-direction-btn action-btn" title="Редактировать">' . $updateIcon . '</button>' . '<p class="col-1"></p>' .
                                     '<button id="' . $model->id . '-delete-direction-id" class="delete-direction-btn action-btn" title="Удалить">' . $closeIcon . '</button>
                                 </div>';
                             }
