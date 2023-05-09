@@ -3,6 +3,8 @@
 namespace frontend\controllers;
 
 use frontend\models\AcademicDegree;
+use frontend\models\CloseStudentForm;
+use frontend\models\DecreeTemplate;
 use frontend\models\Direction;
 use frontend\models\Flow;
 use frontend\models\FlowForm;
@@ -36,6 +38,8 @@ class FlowController extends Controller
     {
         $model = new FlowForm();
         $selectedFlow = new FlowForm();
+        $closeStudentForm = new CloseStudentForm();
+        $decrees = DecreeTemplate::findAllDecrees();
         $flows = Flow::findFlows();
 
         $dataProvider = new ActiveDataProvider([
@@ -65,14 +69,18 @@ class FlowController extends Controller
             }
         }
 
-        if (Yii::$app->request->isAjax && Yii::$app->request->post('idCF')) {
-            Flow::closeFlow(Yii::$app->request->post('idCF'));
+        if ($closeStudentForm->load(Yii::$app->request->post()) && Yii::$app->request->isAjax && Yii::$app->request->post('idCF')) {
+            if ($closeStudentForm->validate()) {
+                $closeStudentForm->closeStudents(Yii::$app->request->post('idCF'));
+            }
         }
 
         return $this->render('index', [
             'model' => $model,
             'dataProvider' => $dataProvider,
-            'selectedFlow' => $selectedFlow
+            'selectedFlow' => $selectedFlow,
+            'closeStudentForm' => $closeStudentForm,
+            'decrees' => $decrees
         ]);
     }
 

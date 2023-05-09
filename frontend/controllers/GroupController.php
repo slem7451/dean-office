@@ -4,6 +4,8 @@ namespace frontend\controllers;
 
 use frontend\models\AcademicDegree;
 use frontend\models\AcademicDegreeForm;
+use frontend\models\CloseStudentForm;
+use frontend\models\DecreeTemplate;
 use frontend\models\Direction;
 use frontend\models\DirectionForm;
 use frontend\models\Flow;
@@ -88,6 +90,8 @@ class GroupController extends Controller
     public function actionView($id)
     {
         $group = Group::findGroup($id);
+        $closeStudentForm = new CloseStudentForm();
+        $decrees = DecreeTemplate::findAllDecrees();
         $students = Student::findStudentsByGroupId($group->id);
         $allStudents = Student::findStudentsNotInGroup($group->id);
         $selectedStudent = new StudentForm();
@@ -116,7 +120,9 @@ class GroupController extends Controller
             'selectedStudent' => $selectedStudent,
             'studentsDataProvider' => $studentsDataProvider,
             'allStudents' => $allStudents,
-            'documents' => $documents
+            'documents' => $documents,
+            'closeStudentForm' => $closeStudentForm,
+            'decrees' => $decrees
         ]);
     }
 

@@ -78,19 +78,22 @@ class CloseStudentForm extends Model
     public function closeStudents($id)
     {
         $success = true;
-        $decree = new Decree();
-        $decree->template_id = $this->decree;
-        $decree->created_at = $this->added_at;
-        $success *= $decree->save();
-        $students = Student::findStudentsInFlow($id);
-        foreach ($students as $student) {
-            $decreeToStudent = new DecreeToStudent();
-            $decreeToStudent->student_id = $student->id;
-            $decreeToStudent->created_at = $this->created_at;
-            $decreeToStudent->decree_id = $decree->id;
-            $success *= $decreeToStudent->save();
-            $success *= Student::closeStudent($student->id);
+        if ($this->decree) {
+            $decree = new Decree();
+            $decree->template_id = $this->decree;
+            $decree->created_at = $this->added_at;
+            $success *= $decree->save();
+            $students = Student::findStudentsInFlow($id);
+            foreach ($students as $student) {
+                $decreeToStudent = new DecreeToStudent();
+                $decreeToStudent->student_id = $student->id;
+                $decreeToStudent->created_at = $this->created_at;
+                $decreeToStudent->decree_id = $decree->id;
+                $success *= $decreeToStudent->save();
+                $success *= Student::closeStudent($student->id);
+            }
         }
+        $success *= Flow::closeFlow($id);
         return $success;
     }
 }

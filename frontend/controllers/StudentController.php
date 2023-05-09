@@ -85,14 +85,6 @@ class StudentController extends Controller
             }
         }
 
-        if (Yii::$app->request->isAjax && Yii::$app->request->post('idDS')) {
-            Student::closeStudent(Yii::$app->request->post('idDS'));
-        }
-
-        if (Yii::$app->request->isAjax && Yii::$app->request->post('idAS')) {
-            Student::openStudent(Yii::$app->request->post('idAS'));
-        }
-
         return $this->render('index', [
             'model' => $model,
             'groups' => $groups,

@@ -12,10 +12,15 @@
 
 /** @var array $documents */
 
+/** @var \frontend\models\CloseStudentForm $closeStudentForm */
+
+/** @var \frontend\models\DecreeTemplate $decrees */
+
 use common\helpers\AgeHelper;
 use common\helpers\DateHelper;
 use common\helpers\GroupHelper;
 use common\helpers\SexHelper;
+use frontend\models\CloseStudentForm;
 use frontend\models\Student;
 use kartik\select2\Select2;
 use yii\bootstrap5\ActiveForm;
@@ -195,8 +200,64 @@ ActiveForm::end();
 Pjax::end();
 ?>
 <?php
+$form = ActiveForm::begin(['id' => 'close-student-form']);
+Modal::begin([
+    'id' => 'close-student-modal',
+    'title' => 'Отчисление студента',
+    'size' => 'modal-lg',
+    'footer' => Html::submitButton('Отчислить', ['class' => 'btn btn-success mg-right-74-p']) . Html::button('Закрыть', [
+            'class' => 'btn btn-danger',
+            'data-dismiss' => 'modal'
+        ])
+]);
+echo $this->render('/student/_close-student-form-modal', [
+    'form' => $form,
+    'model' => $closeStudentForm,
+    'decrees' => $decrees,
+    'operation' => CloseStudentForm::CLOSE_STUDENT
+]);
+Modal::end();
+ActiveForm::end();
+?>
+<?php
+$form = ActiveForm::begin(['id' => 'open-student-form']);
+Modal::begin([
+    'id' => 'open-student-modal',
+    'title' => 'Зачисление студента',
+    'size' => 'modal-lg',
+    'footer' => Html::submitButton('Зачислить', ['class' => 'btn btn-success mg-right-74-p']) . Html::button('Закрыть', [
+            'class' => 'btn btn-danger',
+            'data-dismiss' => 'modal'
+        ])
+]);
+echo $this->render('/student/_close-student-form-modal', [
+    'form' => $form,
+    'model' => $closeStudentForm,
+    'decrees' => $decrees,
+    'operation' => CloseStudentForm::OPEN_STUDENT
+]);
+Modal::end();
+ActiveForm::end();
+?>
+<?php
 $this->registerJS(<<<JS
     $(document).on('hidden.bs.modal', '#update-student-modal', function () {
+        $('#btn-clicked').html('0');
+    })
+JS
+);
+
+$this->registerJS(<<<JS
+    $(document).on('hidden.bs.modal', '#close-student-modal', function () {
+        $('#close-student-form')[0].reset();
+        $('#btn-clicked').html('0');
+    })
+JS
+);
+
+$this->registerJS(<<<JS
+    $(document).on('hidden.bs.modal', '#open-student-modal', function () {
+        $('#open-student-form')[0].reset();
         $('#btn-clicked').html('0');
     })
 JS
@@ -224,20 +285,18 @@ JS
 
 $this->registerJs(<<<JS
     $(document).on('click', '.delete-student-btn', function() {
-        $('#btn-clicked').html('1');
-        if (confirm('Вы уверены, что хотите удалить данного студента?')) {
-            var idDS = this.id.split('-')[0];
-            $.ajax({
-                url: '/index.php?r=student%2Findex',
-                type: 'POST',
-                data: {idDS: idDS},
-                success: function(res) {
-                    $.pjax.reload({container: '#student-table-pjax', replace: false});
-                }
-            });
-        } else {
-            $.pjax.reload({container: '#student-table-pjax', replace: false});
-        }
+        var idDS = this.id.split('-')[0];
+        $('#btn-clicked').html(idDS);
+        $('#close-student-modal').modal('show');
+    })
+JS
+);
+
+$this->registerJs(<<<JS
+    $(document).on('click', '.add-student-btn', function() {
+        var idAS = this.id.split('-')[0];
+        $('#btn-clicked').html(idAS);
+        $('#open-student-modal').modal('show');
     })
 JS
 );
@@ -303,28 +362,48 @@ JS
 );
 
 $this->registerJs(<<<JS
-    $(document).on('click', '.add-student-btn', function() {
-        $('#btn-clicked').html('1');
-        if (confirm('Вы уверены, что хотите зачислить данного студента?')) {
-            var idAS = this.id.split('-')[0];
-            $.ajax({
-                url: '/index.php?r=student%2Findex',
-                type: 'POST',
-                data: {idAS: idAS},
-                success: function(res) {
-                    $.pjax.reload({container: '#student-table-pjax', replace: false});
-                }
-            });
-        } else {
-            $.pjax.reload({container: '#student-table-pjax', replace: false});
-        }
+    $(document).on('pjax:success', '#student-select-pjax', function () {
+        $.pjax.reload({container: '#student-table-pjax', replace: false});
     })
 JS
 );
 
-$this->registerJs(<<<JS
-    $(document).on('pjax:success', '#student-select-pjax', function () {
-        $.pjax.reload({container: '#student-table-pjax', replace: false});
+$this->registerJS(<<<JS
+    $(document).on('beforeSubmit', '#close-student-form', function() {
+        var data = new FormData($(this)[0]);
+        data.append('idDS', $('#btn-clicked').html());
+        $.ajax({
+            url: '/index.php?r=student%2Findex',
+            type: 'POST',
+            data: data,
+            contentType: false,
+            processData: false,
+            success: function(res) {
+                $.pjax.reload({container: '#student-table-pjax', replace: false});
+                $('#close-student-modal').modal('hide');
+            }
+        });
+        return false;
+    })
+JS
+);
+
+$this->registerJS(<<<JS
+    $(document).on('beforeSubmit', '#open-student-form', function() {
+        var data = new FormData($(this)[0]);
+        data.append('idAS', $('#btn-clicked').html());
+        $.ajax({
+            url: '/index.php?r=student%2Findex',
+            type: 'POST',
+            data: data,
+            contentType: false,
+            processData: false,
+            success: function(res) {
+                $.pjax.reload({container: '#student-table-pjax', replace: false});
+                $('#open-student-modal').modal('hide');
+            }
+        });
+        return false;
     })
 JS
 );
