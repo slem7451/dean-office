@@ -79,4 +79,25 @@ class Group extends ActiveRecord
     {
         return self::find()->where(['is', 'closed_at', new Expression('null')])->all();
     }
+
+    public static function findFlowsGroups($id)
+    {
+        return self::find()
+            ->leftJoin('group_to_flow', 'public.group.id = group_to_flow.group_id')
+            ->leftJoin('flow', 'flow.id = group_to_flow.flow_id')
+            ->where(['group_to_flow.flow_id' => $id]);
+    }
+
+    public static function getStatistic()
+    {
+        $statistic = [];
+        $groups = self::find()->where(["DATE_PART('year', created_at)" => date('Y')])->all();
+        foreach ($groups as $group) {
+            $statistic[] = [
+                'name' => $group->name,
+                'studentCount' => StudentToGroup::find()->where(['group_id' => $group->id])->count()
+            ];
+        }
+        return $statistic;
+    }
 }

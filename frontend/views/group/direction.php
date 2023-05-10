@@ -7,7 +7,7 @@ use yii\helpers\Html;
 use yii\widgets\Pjax;
 
 /** @var \frontend\models\DirectionForm $model */
-/** @var \yii\data\ActiveDataProvider $dataProvider*/
+/** @var \yii\data\ActiveDataProvider $dataProvider */
 /** @var \frontend\models\DirectionForm $selectedDirection */
 
 $this->title = 'Направления';
@@ -25,54 +25,68 @@ $closeIcon = '<svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fil
         <i class="icon fas fa-ban"></i>Невозможно удалить направление, так как оно привязано к какой-либо группе.
     </div>
     <div class="direction-container">
-        <?php
-        $form = ActiveForm::begin(['id' => 'direction-form']);
-        Modal::begin([
-            'id' => 'direction-modal',
-            'toggleButton' => ['label' => 'Добавить направление', 'class' => 'btn btn-primary mg-bottom-15px'],
-            'title' => 'Добавление направления',
-            'footer' => Html::submitButton('Создать', ['class' => 'btn btn-success mg-right-61-p']) . Html::button('Закрыть', [
-                    'class' => 'btn btn-danger',
-                    'data-dismiss' => 'modal'
-                ])
-        ]);
-        echo $this->render('_direction-form-modal', [
-            'form' => $form,
-            'model' => $model,
-            'operation' => OPERATION_CREATE
-        ]);
-        Modal::end();
-        ActiveForm::end();
-        Pjax::begin(['id' => 'direction-table-pjax']);
-        echo GridView::widget([
-            'dataProvider' => $dataProvider,
-            'layout' => "{items}\n{pager}",
-            'columns' => [
-                [
-                    'header' => 'Номер',
-                    'content' => function ($model) {
-                        return $model->id;
-                    }
-                ],
-                [
-                    'header' => 'Название',
-                    'content' => function ($model) {
-                        return $model->name;
-                    }
-                ],
-                [
-                    'header' => 'Действия',
-                    'content' => function ($model) use ($updateIcon, $closeIcon) {
-                        return '<div class="row none-margin">
-                                    <button id="' . $model->id . '-update-direction-id" class="update-direction-btn action-btn" title="Редактировать">' . $updateIcon . '</button>' . '<p class="width-1-p"></p>' .
-                            '<button id="' . $model->id . '-delete-direction-id" class="delete-direction-btn action-btn" title="Удалить">' . $closeIcon . '</button>
+        <div class="card card-outline card-primary">
+            <div class="card-header">
+                <div class="card-title">
+                <?php
+                $form = ActiveForm::begin(['id' => 'direction-form']);
+                Modal::begin([
+                    'id' => 'direction-modal',
+                    'toggleButton' => ['label' => 'Добавить направление', 'class' => 'btn btn-primary'],
+                    'title' => 'Добавление направления',
+                    'footer' => Html::submitButton('Создать', ['class' => 'btn btn-success mg-right-61-p']) . Html::button('Закрыть', [
+                            'class' => 'btn btn-danger',
+                            'data-dismiss' => 'modal'
+                        ])
+                ]);
+                echo $this->render('_direction-form-modal', [
+                    'form' => $form,
+                    'model' => $model,
+                    'operation' => OPERATION_CREATE
+                ]);
+                Modal::end();
+                ActiveForm::end();
+                ?>
+                </div>
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                <?php
+                Pjax::begin(['id' => 'direction-table-pjax']);
+                echo GridView::widget([
+                    'dataProvider' => $dataProvider,
+                    'layout' => "{items}\n{pager}",
+                    'columns' => [
+                        [
+                            'header' => 'Номер',
+                            'content' => function ($model) {
+                                return $model->id;
+                            }
+                        ],
+                        [
+                            'header' => 'Название',
+                            'content' => function ($model) {
+                                return $model->name;
+                            }
+                        ],
+                        [
+                            'header' => 'Действия',
+                            'content' => function ($model) use ($updateIcon, $closeIcon) {
+                                return '<div class="row none-margin">
+                                    <button id="' . $model->id . '-update-direction-id" class="update-direction-btn action-btn" title="Редактировать">' . $updateIcon . '</button>' . '<p class="col-1"></p>' .
+                                    '<button id="' . $model->id . '-delete-direction-id" class="delete-direction-btn action-btn" title="Удалить">' . $closeIcon . '</button>
                                 </div>';
-                    }
-                ],
-            ]
-        ]);
-        Pjax::end();
-        ?>
+                            }
+                        ],
+                    ]
+                ]);
+                Pjax::end();
+                ?>
+            </div>
+        </div>
     </div>
     <div id="btn-clicked" class="none-display">0</div>
 <?php

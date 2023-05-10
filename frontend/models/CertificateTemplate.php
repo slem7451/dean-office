@@ -26,7 +26,7 @@ class CertificateTemplate extends ActiveRecord
 
     public static function deleteTemplate($id)
     {
-        $certificate = Decree::findAll(['template_id' => $id]);
+        $certificate = Certificate::findAll(['template_id' => $id]);
         if (count($certificate)) {
             return 0;
         }

@@ -3,6 +3,7 @@
 use common\helpers\DateHelper;
 use common\helpers\GroupHelper;
 use common\helpers\SexHelper;
+use frontend\models\CloseStudentForm;
 use frontend\models\Student;
 use yii\bootstrap5\ActiveForm;
 use yii\bootstrap4\Modal;
@@ -16,6 +17,8 @@ use common\helpers\AgeHelper;
 /** @var \frontend\models\Group $groups */
 /** @var \yii\data\ActiveDataProvider $dataProvider */
 /** @var array $documents */
+/** @var \frontend\models\CloseStudentForm $closeStudentForm */
+/** @var \frontend\models\DecreeTemplate $decrees */
 
 $this->title = 'Студенты';
 
@@ -33,116 +36,129 @@ $addIcon = '<svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill=
   <path d="M2 13c0 1 1 1 1 1h5.256A4.493 4.493 0 0 1 8 12.5a4.49 4.49 0 0 1 1.544-3.393C9.077 9.038 8.564 9 8 9c-5 0-6 3-6 4Z"/>
 </svg>'
 ?>
-
     <div class="student-container">
-        <?php
-        $form = ActiveForm::begin(['id' => 'student-form', 'options' => ['enctype' => 'multipart/form-data']]);
-        Modal::begin([
-            'id' => 'student-modal',
-            'toggleButton' => ['label' => 'Создать студента', 'class' => 'btn btn-primary mg-bottom-15px'],
-            'size' => 'modal-lg',
-            'title' => 'Создание студента',
-            'footer' => Html::submitButton('Создать', ['class' => 'btn btn-success mg-right-76-p']) . Html::button('Закрыть', [
-                    'class' => 'btn btn-danger',
-                    'data-dismiss' => 'modal'
-                ])
-        ]);
-        echo $this->render('_student-form-modal', [
-            'model' => $model,
-            'form' => $form,
-            'groups' => $groups,
-            'operation' => OPERATION_CREATE,
-            'documents' => $documents
-        ]);
-        Modal::end();
-        ActiveForm::end();
-        Pjax::begin(['id' => 'student-table-pjax']);
-        echo GridView::widget([
-            'dataProvider' => $dataProvider,
-            'tableOptions' => ['class' => 'table table-bordered table-hover dataTable dtr-inline'],
-            'layout' => "{items}\n{pager}",
-            'rowOptions' => function ($model, $key, $index, $grid) {
-                return ['class' => 'student-row', 'id' => $model->id . '-' . 'student-id', 'title' => 'Посмотреть подробно'];
-            },
-            'columns' => [
-                [
-                    'header' => 'Имя',
-                    'content' => function ($model) {
-                        return $model->first_name;
-                    }
-                ],
-                [
-                    'header' => 'Фамилия',
-                    'content' => function ($model) {
-                        return $model->second_name;
-                    }
-                ],
-                [
-                    'header' => 'Отчество',
-                    'content' => function ($model) {
-                        return $model->patronymic ?: '';
-                    }
-                ],
-                [
-                    'header' => 'Оплата',
-                    'content' => function ($model) {
-                        return $model->payment == Student::CONTRACT_PAYMENT ? 'Контракт' : 'Бюджет';
-                    }
-                ],
-                [
-                    'header' => 'Дата рождения',
-                    'content' => function ($model) {
-                        return DateHelper::normalizeDate($model->birthdate) . ' (' . AgeHelper::getAge($model->birthdate) . ')';
-                    }
-                ],
-                [
-                    'header' => 'Пол',
-                    'content' => function ($model) {
-                        return SexHelper::getSex($model->sex);
-                    }
-                ],
-                [
-                    'header' => 'Телефон',
-                    'content' => function ($model) {
-                        return $model->phone;
-                    }
-                ],
-                [
-                    'header' => 'Группа',
-                    'content' => function ($model) {
-                        return GroupHelper::getFullName($model->group);
-                    }
-                ],
-                [
-                    'header' => 'Дата поступления',
-                    'content' => function ($model) {
-                        return DateHelper::normalizeDate($model->created_at);
-                    }
-                ],
-                [
-                    'header' => 'Статус',
-                    'content' => function ($model) {
-                        return $model->closed_at ? 'Отчислен' : 'Обучается';
-                    }
-                ],
-                [
-                    'header' => 'Действия',
-                    'content' => function ($model) use ($deleteIcon, $updateIcon, $addIcon) {
-                        if ($model->closed_at) {
-                            return '<div class="row none-margin">
+        <div class="card card-outline card-primary">
+            <div class="card-header">
+                <div class="card-title">
+                    <?php
+                    $form = ActiveForm::begin(['id' => 'student-form', 'options' => ['enctype' => 'multipart/form-data']]);
+                    Modal::begin([
+                        'id' => 'student-modal',
+                        'toggleButton' => ['label' => 'Создать студента', 'class' => 'btn btn-primary'],
+                        'size' => 'modal-lg',
+                        'title' => 'Создание студента',
+                        'footer' => Html::submitButton('Создать', ['class' => 'btn btn-success mg-right-76-p']) . Html::button('Закрыть', [
+                                'class' => 'btn btn-danger',
+                                'data-dismiss' => 'modal'
+                            ])
+                    ]);
+                    echo $this->render('_student-form-modal', [
+                        'model' => $model,
+                        'form' => $form,
+                        'groups' => $groups,
+                        'operation' => OPERATION_CREATE,
+                        'documents' => $documents
+                    ]);
+                    Modal::end();
+                    ActiveForm::end();
+                    ?>
+                </div>
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                <?php
+                Pjax::begin(['id' => 'student-table-pjax']);
+                echo GridView::widget([
+                    'dataProvider' => $dataProvider,
+                    'tableOptions' => ['class' => 'table table-bordered table-hover dataTable dtr-inline'],
+                    'layout' => "{items}\n{pager}",
+                    'rowOptions' => function ($model, $key, $index, $grid) {
+                        return ['class' => 'student-row', 'id' => $model->id . '-' . 'student-id', 'title' => 'Посмотреть подробно'];
+                    },
+                    'columns' => [
+                        [
+                            'header' => 'Имя',
+                            'content' => function ($model) {
+                                return $model->first_name;
+                            }
+                        ],
+                        [
+                            'header' => 'Фамилия',
+                            'content' => function ($model) {
+                                return $model->second_name;
+                            }
+                        ],
+                        [
+                            'header' => 'Отчество',
+                            'content' => function ($model) {
+                                return $model->patronymic ?: '';
+                            }
+                        ],
+                        [
+                            'header' => 'Оплата',
+                            'content' => function ($model) {
+                                return $model->payment == Student::CONTRACT_PAYMENT ? 'Контракт' : 'Бюджет';
+                            }
+                        ],
+                        [
+                            'header' => 'Дата рождения',
+                            'content' => function ($model) {
+                                return DateHelper::normalizeDate($model->birthdate) . ' (' . AgeHelper::getAge($model->birthdate) . ')';
+                            }
+                        ],
+                        [
+                            'header' => 'Пол',
+                            'content' => function ($model) {
+                                return SexHelper::getSex($model->sex);
+                            }
+                        ],
+                        [
+                            'header' => 'Телефон',
+                            'content' => function ($model) {
+                                return $model->phone;
+                            }
+                        ],
+                        [
+                            'header' => 'Группа',
+                            'content' => function ($model) {
+                                return GroupHelper::getFullName($model->group);
+                            }
+                        ],
+                        [
+                            'header' => 'Дата поступления',
+                            'content' => function ($model) {
+                                return DateHelper::normalizeDate($model->created_at);
+                            }
+                        ],
+                        [
+                            'header' => 'Статус',
+                            'content' => function ($model) {
+                                return $model->closed_at ? 'Отчислен' : 'Обучается';
+                            }
+                        ],
+                        [
+                            'header' => 'Действия',
+                            'content' => function ($model) use ($deleteIcon, $updateIcon, $addIcon) {
+                                if ($model->closed_at) {
+                                    return '<div class="row none-margin">
                                 <button id="' . $model->id . '-add-student-id" class="add-student-btn action-btn" title="Зачислить">' . $addIcon . '</button>
                                 </div>';
-                        }
-                        return '<div class="row none-margin">
+                                }
+                                return '<div class="row none-margin">
                                     <button id="' . $model->id . '-update-student-id" class="update-student-btn action-btn" title="Редактировать">' . $updateIcon . '</button>' . '<p class="col-1"></p>' .
-                            '<button id="' . $model->id . '-delete-student-id" class="delete-student-btn action-btn" title="Отчислить">' . $deleteIcon . '</button>
+                                    '<button id="' . $model->id . '-delete-student-id" class="delete-student-btn action-btn" title="Отчислить">' . $deleteIcon . '</button>
                                 </div>';
-                    }
-                ],
-            ]
-        ]);
-        Pjax::end();
-        ?>
+                            }
+                        ],
+                    ]
+                ]);
+                Pjax::end();
+                ?>
+            </div>
+        </div>
     </div>
     <div id="btn-clicked" class="none-display">0</div>
 <?php
@@ -169,6 +185,46 @@ ActiveForm::end();
 Pjax::end();
 ?>
 <?php
+$form = ActiveForm::begin(['id' => 'close-student-form']);
+Modal::begin([
+    'id' => 'close-student-modal',
+    'title' => 'Отчисление студента',
+    'size' => 'modal-lg',
+    'footer' => Html::submitButton('Отчислить', ['class' => 'btn btn-success mg-right-74-p']) . Html::button('Закрыть', [
+            'class' => 'btn btn-danger',
+            'data-dismiss' => 'modal'
+        ])
+]);
+echo $this->render('_close-student-form-modal', [
+    'form' => $form,
+    'model' => $closeStudentForm,
+    'decrees' => $decrees,
+    'operation' => CloseStudentForm::CLOSE_STUDENT
+]);
+Modal::end();
+ActiveForm::end();
+?>
+<?php
+$form = ActiveForm::begin(['id' => 'open-student-form']);
+Modal::begin([
+    'id' => 'open-student-modal',
+    'title' => 'Зачисление студента',
+    'size' => 'modal-lg',
+    'footer' => Html::submitButton('Зачислить', ['class' => 'btn btn-success mg-right-74-p']) . Html::button('Закрыть', [
+            'class' => 'btn btn-danger',
+            'data-dismiss' => 'modal'
+        ])
+]);
+echo $this->render('_close-student-form-modal', [
+    'form' => $form,
+    'model' => $closeStudentForm,
+    'decrees' => $decrees,
+    'operation' => CloseStudentForm::OPEN_STUDENT
+]);
+Modal::end();
+ActiveForm::end();
+?>
+<?php
 $this->registerJS(<<<JS
     $('#student-modal').on('hidden.bs.modal', function () {
         $('#student-form')[0].reset();
@@ -178,6 +234,22 @@ JS
 
 $this->registerJS(<<<JS
     $(document).on('hidden.bs.modal', '#update-student-modal', function () {
+        $('#btn-clicked').html('0');
+    })
+JS
+);
+
+$this->registerJS(<<<JS
+    $(document).on('hidden.bs.modal', '#close-student-modal', function () {
+        $('#close-student-form')[0].reset();
+        $('#btn-clicked').html('0');
+    })
+JS
+);
+
+$this->registerJS(<<<JS
+    $(document).on('hidden.bs.modal', '#open-student-modal', function () {
+        $('#open-student-form')[0].reset();
         $('#btn-clicked').html('0');
     })
 JS
@@ -224,40 +296,18 @@ JS
 
 $this->registerJs(<<<JS
     $(document).on('click', '.delete-student-btn', function() {
-        $('#btn-clicked').html('1');
-        if (confirm('Вы уверены, что хотите отчислить данного студента?')) {
-            var idDS = this.id.split('-')[0];
-            $.ajax({
-                url: '/index.php?r=student%2Findex',
-                type: 'POST',
-                data: {idDS: idDS},
-                success: function(res) {
-                    $.pjax.reload({container: '#student-table-pjax', replace: false});
-                }
-            });
-        } else {
-            $.pjax.reload({container: '#student-table-pjax', replace: false});
-        }
+        var idDS = this.id.split('-')[0];
+        $('#btn-clicked').html(idDS);
+        $('#close-student-modal').modal('show');
     })
 JS
 );
 
 $this->registerJs(<<<JS
     $(document).on('click', '.add-student-btn', function() {
-        $('#btn-clicked').html('1');
-        if (confirm('Вы уверены, что хотите зачислить данного студента?')) {
-            var idAS = this.id.split('-')[0];
-            $.ajax({
-                url: '/index.php?r=student%2Findex',
-                type: 'POST',
-                data: {idAS: idAS},
-                success: function(res) {
-                    $.pjax.reload({container: '#student-table-pjax', replace: false});
-                }
-            });
-        } else {
-            $.pjax.reload({container: '#student-table-pjax', replace: false});
-        }
+        var idAS = this.id.split('-')[0];
+        $('#btn-clicked').html(idAS);
+        $('#open-student-modal').modal('show');
     })
 JS
 );
@@ -289,6 +339,46 @@ $this->registerJS(<<<JS
             success: function(res) {
                 $.pjax.reload({container: '#student-table-pjax', replace: false});
                 $('#update-student-modal').modal('hide');
+            }
+        });
+        return false;
+    })
+JS
+);
+
+$this->registerJS(<<<JS
+    $(document).on('beforeSubmit', '#close-student-form', function() {
+        var data = new FormData($(this)[0]);
+        data.append('idDS', $('#btn-clicked').html());
+        $.ajax({
+            url: '/index.php?r=student%2Findex',
+            type: 'POST',
+            data: data,
+            contentType: false,
+            processData: false,
+            success: function(res) {
+                $.pjax.reload({container: '#student-table-pjax', replace: false});
+                $('#close-student-modal').modal('hide');
+            }
+        });
+        return false;
+    })
+JS
+);
+
+$this->registerJS(<<<JS
+    $(document).on('beforeSubmit', '#open-student-form', function() {
+        var data = new FormData($(this)[0]);
+        data.append('idAS', $('#btn-clicked').html());
+        $.ajax({
+            url: '/index.php?r=student%2Findex',
+            type: 'POST',
+            data: data,
+            contentType: false,
+            processData: false,
+            success: function(res) {
+                $.pjax.reload({container: '#student-table-pjax', replace: false});
+                $('#open-student-modal').modal('hide');
             }
         });
         return false;

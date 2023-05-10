@@ -19,4 +19,18 @@ class DecreeToStudent extends ActiveRecord
     {
         return '{{%decree_to_student}}';
     }
+
+    public static function findDecrees($id)
+    {
+        $decrees = [];
+        $decreeToStudents = self::findAll(['student_id' => $id]);
+        foreach ($decreeToStudents as $decreeToStudent) {
+            $decree = Decree::findOne(['id' => $decreeToStudent->decree_id]);
+            $decrees[] = [
+                'decreeToStudent' => $decreeToStudent,
+                'decree' => $decree
+            ];
+        }
+        return $decrees;
+    }
 }

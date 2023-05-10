@@ -100,4 +100,37 @@ class Student extends ActiveRecord
     {
         return self::find()->where(['is', 'closed_at', new Expression('null')])->all();
     }
+
+    public static function findStudentsInFlow($id)
+    {
+        return self::find()
+            ->leftJoin('student_to_group', 'student.id = student_to_group.student_id')
+            ->leftJoin('group_to_flow', 'group_to_flow.group_id = student_to_group.group_id')
+            ->where(['group_to_flow.flow_id' => $id])
+            ->andWhere(['is', 'student.closed_at', new Expression('null')])
+            ->all();
+    }
+
+    public static function getStatistic()
+    {
+        $closedStudents = Student::find()->where(["DATE_PART('year', closed_at)" => date('Y')])->count();
+        $openedStudents = Student::find()
+            ->where(["DATE_PART('year', created_at)" => date('Y')])
+            ->andWhere(['is', 'closed_at', new Expression('null')])
+            ->count();
+        $budgetStudents = Student::find()
+            ->where(["DATE_PART('year', created_at)" => date('Y'), 'payment' => self::BUDGET_PAYMENT])
+            ->andWhere(['is', 'closed_at', new Expression('null')])
+            ->count();
+        $contractStudents = Student::find()
+            ->where(["DATE_PART('year', created_at)" => date('Y'), 'payment' => self::CONTRACT_PAYMENT])
+            ->andWhere(['is', 'closed_at', new Expression('null')])
+            ->count();
+        return [
+            'closedStudents' => $closedStudents,
+            'openedStudents' => $openedStudents,
+            'budgetStudents' => $budgetStudents,
+            'contractStudents' => $contractStudents
+        ];
+    }
 }

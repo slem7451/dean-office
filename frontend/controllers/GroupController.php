@@ -4,6 +4,8 @@ namespace frontend\controllers;
 
 use frontend\models\AcademicDegree;
 use frontend\models\AcademicDegreeForm;
+use frontend\models\CloseStudentForm;
+use frontend\models\DecreeTemplate;
 use frontend\models\Direction;
 use frontend\models\DirectionForm;
 use frontend\models\Flow;
@@ -88,14 +90,17 @@ class GroupController extends Controller
     public function actionView($id)
     {
         $group = Group::findGroup($id);
+        $closeStudentForm = new CloseStudentForm();
+        $decrees = DecreeTemplate::findAllDecrees();
         $students = Student::findStudentsByGroupId($group->id);
         $allStudents = Student::findStudentsNotInGroup($group->id);
         $selectedStudent = new StudentForm();
-        $groups = Group::findAllGroups();
+        $groups = Group::findAllNotClosedGroups();
+        $documents = [];
 
         if (Yii::$app->request->isPjax && Yii::$app->request->get('idUS')) {
             $id = Yii::$app->request->get('idUS');
-            $selectedStudent->loadFromDB(Student::findStudent($id));
+            $documents = $selectedStudent->loadFromDB(Student::findStudent($id));
         }
 
         if(Yii::$app->request->isAjax && Yii::$app->request->post('students')) {
@@ -103,7 +108,10 @@ class GroupController extends Controller
         }
 
         $studentsDataProvider = new ActiveDataProvider([
-            'query' => $students
+            'query' => $students,
+            'sort' => [
+                'defaultOrder' => ['id' => SORT_DESC],
+            ]
         ]);
 
         return $this->render('view', [
@@ -111,7 +119,10 @@ class GroupController extends Controller
             'groups' => $groups,
             'selectedStudent' => $selectedStudent,
             'studentsDataProvider' => $studentsDataProvider,
-            'allStudents' => $allStudents
+            'allStudents' => $allStudents,
+            'documents' => $documents,
+            'closeStudentForm' => $closeStudentForm,
+            'decrees' => $decrees
         ]);
     }
 

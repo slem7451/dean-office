@@ -2,6 +2,9 @@
 
 namespace frontend\controllers;
 
+use frontend\models\Certificate;
+use frontend\models\Decree;
+use frontend\models\Flow;
 use frontend\models\Group;
 use frontend\models\ResendVerificationEmailForm;
 use frontend\models\Student;
@@ -79,9 +82,20 @@ class SiteController extends Controller
     {
         $groups = Group::findAllGroups();
         $students = Student::findAllStudentsForSearch();
+        $flows = Flow::findAllFlows();
+        $studentStatistic = Student::getStatistic();
+        $groupsStatistic = Group::getStatistic();
+        $decreesStatistic = Decree::getStatistic();
+        $certificatesStatistic = Certificate::getStatistic();
+
         return $this->render('index', [
             'groups' => $groups,
-            'students' => $students
+            'students' => $students,
+            'flows' => $flows,
+            'studentStatistic' => $studentStatistic,
+            'groupsStatistic' => $groupsStatistic,
+            'decreesStatistic' => $decreesStatistic,
+            'certificatesStatistic' => $certificatesStatistic
         ]);
     }
 

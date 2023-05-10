@@ -26,92 +26,100 @@ $deleteIcon = '<svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fi
   <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293 5.354 4.646z"/>
 </svg>';
 ?>
+    <div class="alert alert-danger alert-dismissible" style="display: none">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+        <i class="icon fas fa-ban"></i>Невозможно удалить шаблон, так как он привязан к приказу/справке.
+    </div>
     <div class="template-container">
-        <div class="alert alert-danger alert-dismissible" style="display: none">
-            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-            <i class="icon fas fa-ban"></i>Невозможно удалить шаблон, так как он привязан к приказу/справке.
-        </div>
-        <div class="row">
-            <div class="col-2">
-                <?php
-                $form = ActiveForm::begin(['id' => 'template-form']);
-                Modal::begin([
-                    'id' => 'template-modal',
-                    'toggleButton' => ['label' => 'Создать шаблон', 'class' => 'btn btn-primary mg-bottom-15px'],
-                    'size' => 'modal-lg',
-                    'title' => 'Создание шаблона <button class="question-btn" type="button" title="Инструкция" data-toggle="modal" data-target="#template-instruction-modal">' . $questionIcon . '</button>',
-                    'footer' => Html::submitButton('Создать', ['class' => 'btn btn-success mg-right-76-p']) . Html::button('Закрыть', [
-                            'class' => 'btn btn-danger',
-                            'data-dismiss' => 'modal'
-                        ])
-                ]);
-                echo $this->render('_template-form-modal', [
-                    'model' => $model,
-                    'form' => $form,
-                    'operation' => OPERATION_CREATE,
-                    'templateExample' => $templateExample,
-                    'view' => false
-                ]);
-                Modal::end();
-                ActiveForm::end();
-                ?>
+        <div class="card card-outline card-primary">
+            <div class="card-header">
+                <div class="card-title">
+                    <div class="row">
+                            <?php
+                            $form = ActiveForm::begin(['id' => 'template-form']);
+                            Modal::begin([
+                                'id' => 'template-modal',
+                                'toggleButton' => ['label' => 'Создать шаблон', 'class' => 'btn btn-primary mg-right-20-px'],
+                                'size' => 'modal-lg',
+                                'title' => 'Создание шаблона <button class="question-btn" type="button" title="Инструкция" data-toggle="modal" data-target="#template-instruction-modal">' . $questionIcon . '</button>',
+                                'footer' => Html::submitButton('Создать', ['class' => 'btn btn-success mg-right-76-p']) . Html::button('Закрыть', [
+                                        'class' => 'btn btn-danger',
+                                        'data-dismiss' => 'modal'
+                                    ])
+                            ]);
+                            echo $this->render('_template-form-modal', [
+                                'model' => $model,
+                                'form' => $form,
+                                'operation' => OPERATION_CREATE,
+                                'templateExample' => $templateExample,
+                                'view' => false
+                            ]);
+                            Modal::end();
+                            ActiveForm::end();
+                            ?>
+                            <?php
+                            Modal::begin([
+                                'id' => 'template-instruction-modal',
+                                'toggleButton' => ['label' => 'Инструкция', 'class' => 'btn btn-primary'],
+                                'size' => 'modal-lg',
+                                'title' => 'Инструкция',
+                                'footer' => Html::button('Закрыть', [
+                                    'class' => 'btn btn-danger',
+                                    'data-dismiss' => 'modal'
+                                ])
+                            ]);
+                            echo $this->render('_instruction');
+                            Modal::end();
+                            ?>
+                    </div>
+                </div>
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i>
+                    </button>
+                </div>
             </div>
-            <div class="col-10">
-                <?php
-                Modal::begin([
-                    'id' => 'template-instruction-modal',
-                    'toggleButton' => ['label' => 'Инструкция', 'class' => 'btn btn-primary mg-bottom-15px'],
-                    'size' => 'modal-lg',
-                    'title' => 'Инструкция',
-                    'footer' => Html::button('Закрыть', [
-                        'class' => 'btn btn-danger',
-                        'data-dismiss' => 'modal'
-                    ])
-                ]);
-                echo $this->render('_instruction');
-                Modal::end();
-                ?>
-            </div>
-        </div>
-        <?php Pjax::begin(['id' => 'template-table-pjax']); ?>
-        <?= GridView::widget([
-            'dataProvider' => $dataProvider,
-            'tableOptions' => ['class' => 'table table-bordered table-hover dataTable dtr-inline'],
-            'layout' => "{items}\n{pager}",
-            'rowOptions' => function ($model, $key, $index, $grid) {
-                return ['class' => 'template-row cursor-pointer', 'id' => $model['template']['id'] . '%' . $model['type'] . '-template-id', 'title' => 'Посмотреть подробно'];
-            },
-            'columns' => [
-                [
-                    'header' => 'Номер',
-                    'content' => function ($model) {
-                        return $model['template']['id'];
-                    }
-                ],
-                [
-                    'header' => 'Тип',
-                    'content' => function ($model) {
-                        return $model['type'] == TemplateForm::TYPE_DECREE ? 'Приказ' : 'Справка';
-                    }
-                ],
-                [
-                    'header' => 'Название',
-                    'content' => function ($model) {
-                        return $model['template']['name'];
-                    }
-                ],
-                [
-                    'header' => 'Действия',
-                    'content' => function ($model) use ($deleteIcon, $updateIcon) {
-                        return '<div class="row none-margin">
+            <div class="card-body">
+                <?php Pjax::begin(['id' => 'template-table-pjax']); ?>
+                <?= GridView::widget([
+                    'dataProvider' => $dataProvider,
+                    'tableOptions' => ['class' => 'table table-bordered table-hover dataTable dtr-inline'],
+                    'layout' => "{items}\n{pager}",
+                    'rowOptions' => function ($model, $key, $index, $grid) {
+                        return ['class' => 'template-row cursor-pointer', 'id' => $model['template']['id'] . '%' . $model['type'] . '-template-id', 'title' => 'Посмотреть подробно'];
+                    },
+                    'columns' => [
+                        [
+                            'header' => 'Номер',
+                            'content' => function ($model) {
+                                return $model['template']['id'];
+                            }
+                        ],
+                        [
+                            'header' => 'Тип',
+                            'content' => function ($model) {
+                                return $model['type'] == TemplateForm::TYPE_DECREE ? 'Приказ' : 'Справка';
+                            }
+                        ],
+                        [
+                            'header' => 'Название',
+                            'content' => function ($model) {
+                                return $model['template']['name'];
+                            }
+                        ],
+                        [
+                            'header' => 'Действия',
+                            'content' => function ($model) use ($deleteIcon, $updateIcon) {
+                                return '<div class="row none-margin">
                                     <button id="' . $model['template']['id'] . '%' . $model['type'] . '-update-template-id" class="update-template-btn action-btn" title="Редактировать">' . $updateIcon . '</button>' . '<p class="col-1"></p>' .
-                            '<button id="' . $model['template']['id'] . '%' . $model['type'] . '-delete-template-id" class="delete-template-btn action-btn" title="Удалить">' . $deleteIcon . '</button>
+                                    '<button id="' . $model['template']['id'] . '%' . $model['type'] . '-delete-template-id" class="delete-template-btn action-btn" title="Удалить">' . $deleteIcon . '</button>
                                 </div>';
-                    }
-                ],
-            ]
-        ]); ?>
-        <?php Pjax::end(); ?>
+                            }
+                        ],
+                    ]
+                ]); ?>
+                <?php Pjax::end(); ?>
+            </div>
+        </div>
     </div>
     <div id="btn-clicked" class="none-display">%</div>
     <div id="type-template" class="none-display">%</div>

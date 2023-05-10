@@ -50,4 +50,20 @@ class Certificate extends ActiveRecord
         $certificate = self::findOne(['id' => $id]);
         return $certificate->delete();
     }
+
+    public static function getStatistic()
+    {
+        $statistic = [];
+        $certificates = self::find()->where(["DATE_PART('year', created_at)" => date('Y')])->all();
+        foreach ($certificates as $certificate) {
+            $studentCount = CertificateToStudent::find()->where(['certificate_id' => $certificate->id])->count();
+            if ($studentCount) {
+                $statistic[] = [
+                    'name' => $certificate->template->name,
+                    'studentCount' => $studentCount
+                ];
+            }
+        }
+        return $statistic;
+    }
 }

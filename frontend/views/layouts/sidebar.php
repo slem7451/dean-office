@@ -52,7 +52,7 @@
                         'label' => 'Приказы и справки',
                         'icon' => 'file',
                         'items' => [
-                            ['label' => 'Приказы', 'icon' => 'folder-open', 'url' => ['#']],
+                            ['label' => 'Приказы', 'icon' => 'folder-open', 'url' => ['/decree/index']],
                             ['label' => 'Справки', 'icon' => 'stamp', 'url' => ['/certificate/index']],
                             ['label' => 'Шаблоны', 'icon' => 'clipboard-check', 'url' => ['/template/index']],
                         ]

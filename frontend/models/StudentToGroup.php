@@ -30,13 +30,14 @@ class StudentToGroup extends ActiveRecord
     {
         $success = true;
         foreach ($students as $student) {
-            $studentToGroup = StudentToGroup::find()->where(['student_id' => $student, "DATE_PART('year', closed_at)" => 3000])->one();
+            $studentToGroup = StudentToGroup::find()->where(['student_id' => $student])->andWhere(['is', 'closed_at', new Expression('null')])->one();
             $studentToGroup->closed_at = new Expression('NOW()');
             $success *= $studentToGroup->save();
 
             $studentToGroup = new StudentToGroup();
             $studentToGroup->group_id = $id;
             $studentToGroup->student_id = $student;
+            $studentToGroup->created_at = new Expression('NOW()');
             $success *= $studentToGroup->save();
         }
         return $success;
