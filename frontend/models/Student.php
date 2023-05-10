@@ -110,4 +110,27 @@ class Student extends ActiveRecord
             ->andWhere(['is', 'student.closed_at', new Expression('null')])
             ->all();
     }
+
+    public static function getStatistic()
+    {
+        $closedStudents = Student::find()->where(["DATE_PART('year', closed_at)" => date('Y')])->count();
+        $openedStudents = Student::find()
+            ->where(["DATE_PART('year', created_at)" => date('Y')])
+            ->andWhere(['is', 'closed_at', new Expression('null')])
+            ->count();
+        $budgetStudents = Student::find()
+            ->where(["DATE_PART('year', created_at)" => date('Y'), 'payment' => self::BUDGET_PAYMENT])
+            ->andWhere(['is', 'closed_at', new Expression('null')])
+            ->count();
+        $contractStudents = Student::find()
+            ->where(["DATE_PART('year', created_at)" => date('Y'), 'payment' => self::CONTRACT_PAYMENT])
+            ->andWhere(['is', 'closed_at', new Expression('null')])
+            ->count();
+        return [
+            'closedStudents' => $closedStudents,
+            'openedStudents' => $openedStudents,
+            'budgetStudents' => $budgetStudents,
+            'contractStudents' => $contractStudents
+        ];
+    }
 }

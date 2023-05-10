@@ -60,4 +60,9 @@ class Flow extends ActiveRecord
     {
         return self::find()->where(['is', 'closed_at', new Expression('null')])->all();
     }
+
+    public static function findAllFlows()
+    {
+        return self::find()->all();
+    }
 }

@@ -50,4 +50,20 @@ class Decree extends ActiveRecord
         $decree = self::findOne(['id' => $id]);
         return $decree->delete();
     }
+
+    public static function getStatistic()
+    {
+        $statistic = [];
+        $decrees = self::find()->where(["DATE_PART('year', created_at)" => date('Y')])->all();
+        foreach ($decrees as $decree) {
+            $studentCount = DecreeToStudent::find()->where(['decree_id' => $decree->id])->count();
+            if ($studentCount) {
+                $statistic[] = [
+                    'name' => $decree->template->name,
+                    'studentCount' => $studentCount
+                ];
+            }
+        }
+        return $statistic;
+    }
 }

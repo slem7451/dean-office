@@ -87,4 +87,17 @@ class Group extends ActiveRecord
             ->leftJoin('flow', 'flow.id = group_to_flow.flow_id')
             ->where(['group_to_flow.flow_id' => $id]);
     }
+
+    public static function getStatistic()
+    {
+        $statistic = [];
+        $groups = self::find()->where(["DATE_PART('year', created_at)" => date('Y')])->all();
+        foreach ($groups as $group) {
+            $statistic[] = [
+                'name' => $group->name,
+                'studentCount' => StudentToGroup::find()->where(['group_id' => $group->id])->count()
+            ];
+        }
+        return $statistic;
+    }
 }
