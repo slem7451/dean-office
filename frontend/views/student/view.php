@@ -6,7 +6,7 @@ use common\helpers\GroupHelper;
 use common\helpers\SexHelper;
 use common\helpers\TemplateHelper;
 use frontend\models\Student;
-use frontend\models\StudentForm;
+use kartik\date\DatePicker;
 use yii\bootstrap5\ActiveForm;
 use yii\bootstrap4\Modal;
 use yii\grid\GridView;
@@ -31,27 +31,13 @@ $deleteIcon = '<svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fi
   <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293 5.354 4.646z"/>
 </svg>';
 ?>
-<?php
-$form = ActiveForm::begin(['id' => 'student-form', 'options' => ['enctype' => 'multipart/form-data']]);
-Modal::begin([
-    'id' => 'student-modal',
-    'size' => 'modal-lg',
-    'title' => 'Создание студента',
-    'footer' => Html::submitButton('Создать', ['class' => 'btn btn-success mg-right-76-p']) . Html::button('Закрыть', [
-            'class' => 'btn btn-danger',
-            'data-dismiss' => 'modal'
-        ])
-]);
-echo $this->render('_student-form-modal', [
-    'model' => new StudentForm(),
-    'form' => $form,
-    'groups' => [],
-    'operation' => OPERATION_CREATE,
-    'documents' => []
-]);
-Modal::end();
-ActiveForm::end();
-?>
+
+    <div class="none-display">
+        <?php
+        echo DatePicker::widget(['name' => 'enable-file-input']);
+        ?>
+    </div>
+
     <div class="view-student-container">
         <div class="card card-outline card-primary">
             <div class="card-header">

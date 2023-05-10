@@ -75,7 +75,7 @@ class CloseStudentForm extends Model
         return $success;
     }
 
-    public function closeStudents($id)
+    public function closeFlow($id)
     {
         $success = true;
         if ($this->decree) {

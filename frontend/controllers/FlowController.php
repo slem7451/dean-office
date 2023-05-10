@@ -71,7 +71,7 @@ class FlowController extends Controller
 
         if ($closeStudentForm->load(Yii::$app->request->post()) && Yii::$app->request->isAjax && Yii::$app->request->post('idCF')) {
             if ($closeStudentForm->validate()) {
-                $closeStudentForm->closeStudents(Yii::$app->request->post('idCF'));
+                $closeStudentForm->closeFlow(Yii::$app->request->post('idCF'));
             }
         }
 
