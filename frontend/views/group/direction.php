@@ -61,15 +61,33 @@ $closeIcon = '<svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fil
                     'layout' => "{items}\n{pager}",
                     'columns' => [
                         [
-                            'header' => 'Номер',
+                            'header' => 'Шифр',
                             'content' => function ($model) {
                                 return $model->id;
                             }
                         ],
                         [
-                            'header' => 'Название',
+                            'header' => 'Полное название',
                             'content' => function ($model) {
-                                return $model->name;
+                                return $model->full_name;
+                            }
+                        ],
+                        [
+                            'header' => 'Короткое название',
+                            'content' => function ($model) {
+                                return $model->short_name;
+                            }
+                        ],
+                        [
+                            'header' => 'Квалификация',
+                            'content' => function ($model) {
+                                return $model->academic_name;
+                            }
+                        ],
+                        [
+                            'header' => 'Направленность (профиль)',
+                            'content' => function ($model) {
+                                return $model->profile;
                             }
                         ],
                         [

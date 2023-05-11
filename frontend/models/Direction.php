@@ -8,7 +8,10 @@ use yii\db\ActiveRecord;
  * Direction model
  *
  * @property string $id
- * @property string $name
+ * @property string $full_name
+ * @property string $short_name
+ * @property string $academic_name
+ * @property string $profile
  */
 
 class Direction extends ActiveRecord
