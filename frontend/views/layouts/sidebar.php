@@ -41,11 +41,11 @@
                         'label' => 'Контингент',
                         'icon' => 'id-card',
                         'items' => [
+                            ['label' => 'Направления', 'icon' => 'clipboard', 'url' => ['/group/direction']],
                             ['label' => 'Потоки', 'icon' => 'paper-plane', 'url' => ['/flow/index']],
                             ['label' => 'Группы', 'icon' => 'users', 'url' => ['/group/index']],
                             ['label' => 'Студенты', 'icon' => 'user-graduate', 'url' => ['/student/index']],
                             ['label' => 'Академические степени', 'icon' => 'graduation-cap', 'url' => ['/group/academic-degree']],
-                            ['label' => 'Направления', 'icon' => 'clipboard', 'url' => ['/group/direction']],
                         ]
                     ],
                     [

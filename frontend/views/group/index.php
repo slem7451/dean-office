@@ -78,15 +78,15 @@ $closeIcon = '<svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fil
                             }
                         ],
                         [
-                            'header' => 'Поток',
-                            'content' => function ($model) {
-                                return $model->flow->name;
-                            }
-                        ],
-                        [
                             'header' => 'Кол-во студентов',
                             'content' => function ($model) {
                                 return count($model->students);
+                            }
+                        ],
+                        [
+                            'header' => 'Поток',
+                            'content' => function ($model) {
+                                return $model->flow->name;
                             }
                         ],
                         [

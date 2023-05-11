@@ -27,7 +27,7 @@ $this->title = 'Главная';
 
 ?>
     <div class="site-index">
-        <h1 class="text-center">Начальная страница</h1>
+        <h1 class="text-center">Электронный деканат</h1>
         <div class="row">
             <div class="searcher col-3">
                 <div class="card card-outline card-primary">
