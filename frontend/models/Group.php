@@ -11,7 +11,6 @@ use yii\db\Expression;
  * @property integer $id
  * @property string $name
  * @property string $direction_id
- * @property integer $academic_id
  * @property date $created_at
  * @property date $closed_at
  */
@@ -38,11 +37,6 @@ class Group extends ActiveRecord
         return $this->hasOne(Direction::class, ['id' => 'direction_id']);
     }
 
-    public function getAcademicDegree()
-    {
-        return $this->hasOne(AcademicDegree::class, ['id' => 'academic_id']);
-    }
-
     public function getToStudents()
     {
         return $this->hasMany(StudentToGroup::class, ['group_id' => 'id']);
@@ -55,7 +49,7 @@ class Group extends ActiveRecord
 
     public static function findGroups()
     {
-        return self::find()->with(['flow', 'direction', 'academicDegree', 'students']);
+        return self::find()->with(['flow', 'direction', 'students']);
     }
 
     public static function findAllGroups()
@@ -95,7 +89,7 @@ class Group extends ActiveRecord
         foreach ($groups as $group) {
             $statistic[] = [
                 'name' => $group->name,
-                'studentCount' => StudentToGroup::find()->where(['group_id' => $group->id])->count()
+                'studentCount' => StudentToGroup::find()->where(['group_id' => $group->id])->andWhere(['is', 'closed_at', new Expression('null')])->count()
             ];
         }
         return $statistic;

@@ -2,7 +2,6 @@
 
 namespace frontend\controllers;
 
-use frontend\models\AcademicDegree;
 use frontend\models\CloseStudentForm;
 use frontend\models\DecreeTemplate;
 use frontend\models\Direction;
@@ -90,7 +89,6 @@ class FlowController extends Controller
         $flow = Flow::findFlow($id);
         $groups = Group::findFlowsGroups($id);
         $directions = Direction::findAllDirections();
-        $academicDegrees = AcademicDegree::findAllAcademicDegrees();
         $flows = Flow::findAllNotClosedFlows();
         $dataProvider = new ActiveDataProvider([
             'query' => $groups,
@@ -111,7 +109,6 @@ class FlowController extends Controller
             'dataProvider' => $dataProvider,
             'selectedGroup' => $selectedGroup,
             'directions' => $directions,
-            'academicDegrees' => $academicDegrees,
             'flows' => $flows,
             'flow' => $flow
         ]);

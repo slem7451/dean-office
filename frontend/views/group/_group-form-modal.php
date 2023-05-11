@@ -7,8 +7,6 @@
 
 /** @var \frontend\models\Direction $directions */
 
-/** @var \frontend\models\AcademicDegree $academicDegrees */
-
 /** @var \frontend\models\Flow $flows */
 
 use kartik\date\DatePicker;
@@ -26,20 +24,6 @@ echo $form->field($model, 'name')->textInput(['placeholder' => 'Название
                 'prompt' => ['text' => 'Поток', 'options' => ['disabled' => true, 'selected' => true]]
         ])
         ->label(false);
-    echo $form->field($model, 'direction_id', ['options' => ['class' => 'col-6']])
-        ->dropDownList(ArrayHelper::map($directions, 'id', 'name'), [
-            'prompt' => ['text' => 'Направление', 'options' => ['disabled' => true, 'selected' => true]]
-        ])
-        ->label(false);
-    ?>
-</div>
-<div class="row">
-    <?php
-    echo $form->field($model, 'academic_id', ['options' => ['class' => 'col-6']])
-        ->dropDownList(ArrayHelper::map($academicDegrees, 'id', 'name'), [
-            'prompt' => ['text' => 'Степень', 'options' => ['disabled' => true, 'selected' => true]]
-        ])
-        ->label(false);
     echo $form->field($model, 'created_at', ['options' => ['class' => 'col-6']])->widget(DatePicker::class, [
         'name' => 'dp_created_at-' . $operation,
         'type' => DatePicker::TYPE_INPUT,
@@ -54,3 +38,12 @@ echo $form->field($model, 'name')->textInput(['placeholder' => 'Название
     ])->label(false);
     ?>
 </div>
+    <?php
+    echo $form->field($model, 'direction_id')
+        ->dropDownList(ArrayHelper::map($directions, 'id', function ($model) {
+            return $model->id . ' ' . $model->short_name;
+        }), [
+            'prompt' => ['text' => 'Направление', 'options' => ['disabled' => true, 'selected' => true]]
+        ])
+        ->label(false);
+    ?>

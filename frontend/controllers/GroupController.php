@@ -2,8 +2,6 @@
 
 namespace frontend\controllers;
 
-use frontend\models\AcademicDegree;
-use frontend\models\AcademicDegreeForm;
 use frontend\models\CloseStudentForm;
 use frontend\models\DecreeTemplate;
 use frontend\models\Direction;
@@ -44,7 +42,6 @@ class GroupController extends Controller
         $selectedGroup = new GroupForm();
         $groups = Group::findGroups();
         $directions = Direction::findAllDirections();
-        $academicDegrees = AcademicDegree::findAllAcademicDegrees();
         $flows = Flow::findAllNotClosedFlows();
         $dataProvider = new ActiveDataProvider([
             'query' => $groups,
@@ -82,7 +79,6 @@ class GroupController extends Controller
             'dataProvider' => $dataProvider,
             'selectedGroup' => $selectedGroup,
             'directions' => $directions,
-            'academicDegrees' => $academicDegrees,
             'flows' => $flows
         ]);
     }
@@ -123,51 +119,6 @@ class GroupController extends Controller
             'documents' => $documents,
             'closeStudentForm' => $closeStudentForm,
             'decrees' => $decrees
-        ]);
-    }
-
-    public function actionAcademicDegree()
-    {
-        $model = new AcademicDegreeForm();
-        $selectedAcademicDegree = new AcademicDegreeForm();
-        $academicDegrees = AcademicDegree::findAcademicDegrees();
-        $dataProvider = new ActiveDataProvider([
-            'query' => $academicDegrees,
-            'pagination' => [
-                'pageSize' => 20,
-            ],
-            'sort' => [
-                'defaultOrder' => ['id' => SORT_DESC],
-            ]
-        ]);
-
-        if ($model->load(Yii::$app->request->post()) && Yii::$app->request->isAjax && !Yii::$app->request->post('idUA')) {
-            if ($model->validate()) {
-                $model->saveAcademicDegree();
-            }
-        }
-
-        if (Yii::$app->request->isPjax && Yii::$app->request->get('idUA')) {
-            $id = Yii::$app->request->get('idUA');
-            $selectedAcademicDegree->loadFromDB(AcademicDegree::findAcademicDegree($id));
-        }
-
-        if ($selectedAcademicDegree->load(Yii::$app->request->post()) && Yii::$app->request->isAjax && Yii::$app->request->post('idUA')) {
-            if ($selectedAcademicDegree->validate()) {
-                $selectedAcademicDegree->updateAcademicDegree(Yii::$app->request->post('idUA'));
-            }
-        }
-
-        if (Yii::$app->request->isAjax && Yii::$app->request->post('idDA')) {
-            if (!AcademicDegree::deleteAcademicDegree(Yii::$app->request->post('idDA'))) {
-                return 0;
-            }
-        }
-
-        return $this->render('academic-degree', [
-            'model' => $model,
-            'selectedAcademicDegree' => $selectedAcademicDegree,
-            'dataProvider' => $dataProvider
         ]);
     }
 
