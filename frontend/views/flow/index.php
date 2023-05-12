@@ -5,6 +5,7 @@ use frontend\models\CloseStudentForm;
 use yii\bootstrap4\Modal;
 use yii\bootstrap5\ActiveForm;
 use yii\grid\GridView;
+use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\widgets\Pjax;
 
@@ -13,6 +14,7 @@ use yii\widgets\Pjax;
 /** @var \yii\data\ActiveDataProvider $dataProvider */
 /** @var \frontend\models\CloseStudentForm $closeStudentForm */
 /** @var \frontend\models\DecreeTemplate $decrees */
+/** @var \frontend\models\Flow $years */
 
 $this->title = 'Потоки';
 
@@ -28,9 +30,10 @@ $closeIcon = '<svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fil
     <div class="flow-container">
         <div class="card card-outline card-primary">
             <div class="card-header">
-                <div class="card-title">
+                <div class="card-title col-10">
+                    <div class="row">
                     <?php
-                    $form = ActiveForm::begin(['id' => 'flow-form']);
+                    $form = ActiveForm::begin(['id' => 'flow-form', 'options' => ['class' => 'col-2']]);
                     Modal::begin([
                         'id' => 'flow-modal',
                         'toggleButton' => ['label' => 'Создать поток', 'class' => 'btn btn-primary'],
@@ -47,7 +50,26 @@ $closeIcon = '<svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fil
                     ]);
                     Modal::end();
                     ActiveForm::end();
+                    echo Html::input('string', 'flow-name', null, [
+                        'placeholder' => 'Название потока',
+                        'class' => 'form-control col-2 mg-right-20-px',
+                        'id' => 'flow-search-name'
+                    ]);
+                    echo Html::dropDownList('created-select', null, ArrayHelper::map($years, 'flow_year', 'flow_year'), [
+                        'class' => 'form-select col-2 mg-right-20-px',
+                        'prompt' => 'Все года',
+                        'id' => 'flow-search-created_at'
+                    ]);
+                    echo Html::dropDownList('closed-select', null, [
+                        0 => 'Все потоки',
+                        1 => 'На обучении',
+                        2 => 'Выпущен'
+                    ], [
+                        'class' => 'form-select col-2 mg-right-20-px',
+                        'id' => 'flow-search-closed_at'
+                    ]);
                     ?>
+                    </div>
                 </div>
                 <div class="card-tools">
                     <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i>
@@ -273,5 +295,38 @@ $this->registerJS(<<<JS
         });
         return false;
     })
+JS
+);
+
+$this->registerJS(<<<JS
+    $(document).on('input', '#flow-search-name', function () {
+        $.pjax.reload({container: '#flow-table-pjax', data: {
+            FN: $('#flow-search-name').val(),
+            FO: $('#flow-search-created_at').val(),
+            FC: $('#flow-search-closed_at').val()
+            }, replace: false});
+    });
+JS
+);
+
+$this->registerJS(<<<JS
+    $(document).on('change', '#flow-search-created_at', function () {
+        $.pjax.reload({container: '#flow-table-pjax', data: {
+            FN: $('#flow-search-name').val(),
+            FO: $('#flow-search-created_at').val(),
+            FC: $('#flow-search-closed_at').val()
+            }, replace: false});
+    });
+JS
+);
+
+$this->registerJS(<<<JS
+    $(document).on('change', '#flow-search-closed_at', function () {
+        $.pjax.reload({container: '#flow-table-pjax', data: {
+            FN: $('#flow-search-name').val(),
+            FO: $('#flow-search-created_at').val(),
+            FC: $('#flow-search-closed_at').val()
+            }, replace: false});
+    });
 JS
 );

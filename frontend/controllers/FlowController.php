@@ -38,8 +38,12 @@ class FlowController extends Controller
         $model = new FlowForm();
         $selectedFlow = new FlowForm();
         $closeStudentForm = new CloseStudentForm();
+        $name = Yii::$app->request->get('FN');
+        $year = Yii::$app->request->get('FO');
+        $closed_at = Yii::$app->request->get('FC');
+        $years = Flow::getYearFlows();
         $decrees = DecreeTemplate::findAllDecrees();
-        $flows = Flow::findFlows();
+        $flows = Flow::findFlows($name, $year, $closed_at);
 
         $dataProvider = new ActiveDataProvider([
             'query' => $flows,
@@ -79,7 +83,8 @@ class FlowController extends Controller
             'dataProvider' => $dataProvider,
             'selectedFlow' => $selectedFlow,
             'closeStudentForm' => $closeStudentForm,
-            'decrees' => $decrees
+            'decrees' => $decrees,
+            'years' => $years
         ]);
     }
 

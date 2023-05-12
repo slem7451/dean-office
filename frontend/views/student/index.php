@@ -56,7 +56,7 @@ $this->title = 'Студенты';
                             'prompt' => 'Все группы',
                             'id' => 'student-search-group'
                         ]);
-                        echo Html::dropDownList('group-select', null, [
+                        echo Html::dropDownList('closed-select', null, [
                             0 => 'Все студенты',
                             1 => 'Обучается',
                             2 => 'Отчислен'

@@ -16,6 +16,8 @@ use yii\db\Expression;
 
 class Flow extends ActiveRecord
 {
+    public $flow_year;
+
     public static function tableName()
     {
         return '{{%flow}}';
@@ -31,9 +33,28 @@ class Flow extends ActiveRecord
         return $this->hasMany(Group::class, ['id' => 'group_id'])->via('toGroups');
     }
 
-    public static function findFlows()
+    public static function findFlows($name = null, $year = null, $closed_at = null)
     {
-        return self::find()->with('groups');
+        $flows = self::find()->with('groups');
+        if ($name) {
+            $flows->andWhere(['ilike', 'name', $name]);
+        }
+        if ($year) {
+            $flows->andWhere(["DATE_PART('year', created_at)" => $year]);
+        }
+        if ($closed_at) {
+            switch ($closed_at) {
+                case 1:
+                    $flows->andWhere(['is', 'closed_at', new Expression('null')]);
+                    break;
+                case 2:
+                    $flows->andWhere(['is not', 'closed_at', new Expression('null')]);
+                    break;
+                default:
+                    break;
+            }
+        }
+        return $flows;
     }
 
     public static function findFlow($id)
@@ -64,5 +85,10 @@ class Flow extends ActiveRecord
     public static function findAllFlows()
     {
         return self::find()->all();
+    }
+
+    public static function getYearFlows()
+    {
+        return self::find()->select(["DATE_PART('year', created_at) as flow_year"])->groupBy(["DATE_PART('year', created_at)"])->all();
     }
 }
