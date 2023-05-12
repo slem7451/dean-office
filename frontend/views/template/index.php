@@ -33,7 +33,7 @@ $deleteIcon = '<svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fi
     <div class="template-container">
         <div class="card card-outline card-primary">
             <div class="card-header">
-                <div class="card-title">
+                <div class="card-title col-10">
                     <div class="row">
                             <?php
                             $form = ActiveForm::begin(['id' => 'template-form']);
@@ -60,7 +60,7 @@ $deleteIcon = '<svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fi
                             <?php
                             Modal::begin([
                                 'id' => 'template-instruction-modal',
-                                'toggleButton' => ['label' => 'Инструкция', 'class' => 'btn btn-primary'],
+                                'toggleButton' => ['label' => 'Инструкция', 'class' => 'btn btn-primary mg-right-20-px'],
                                 'size' => 'modal-lg',
                                 'title' => 'Инструкция',
                                 'footer' => Html::button('Закрыть', [
@@ -70,6 +70,24 @@ $deleteIcon = '<svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fi
                             ]);
                             echo $this->render('_instruction');
                             Modal::end();
+                            echo Html::input('string', 'template-id', null, [
+                                'placeholder' => 'Номер',
+                                'class' => 'form-control col-2 mg-right-20-px',
+                                'id' => 'template-search-id'
+                            ]);
+                            echo Html::input('string', 'template-name', null, [
+                                'placeholder' => 'Название',
+                                'class' => 'form-control col-2 mg-right-20-px',
+                                'id' => 'template-search-name'
+                            ]);
+                            echo Html::dropDownList('type-select', null, [
+                                0 => 'Все шаблоны',
+                                TemplateForm::TYPE_DECREE => 'Приказ',
+                                TemplateForm::TYPE_CERTIFICATE => 'Справка'
+                            ], [
+                                'class' => 'form-control col-2',
+                                'id' => 'template-search-type'
+                            ]);
                             ?>
                     </div>
                 </div>
@@ -290,5 +308,38 @@ $this->registerJS(<<<JS
         });
         return false;
     })
+JS
+);
+
+$this->registerJS(<<<JS
+    $(document).on('input', '#template-search-name', function () {
+        $.pjax.reload({container: '#template-table-pjax', data: {
+            TN: $('#template-search-name').val(),
+            TI: $('#template-search-id').val(),
+            TT: $('#template-search-type').val()
+            }, replace: false});
+    });
+JS
+);
+
+$this->registerJS(<<<JS
+    $(document).on('input', '#template-search-id', function () {
+        $.pjax.reload({container: '#template-table-pjax', data: {
+            TN: $('#template-search-name').val(),
+            TI: $('#template-search-id').val(),
+            TT: $('#template-search-type').val()
+            }, replace: false});
+    });
+JS
+);
+
+$this->registerJS(<<<JS
+    $(document).on('change', '#template-search-type', function () {
+        $.pjax.reload({container: '#template-table-pjax', data: {
+            TN: $('#template-search-name').val(),
+            TI: $('#template-search-id').val(),
+            TT: $('#template-search-type').val()
+            }, replace: false});
+    });
 JS
 );

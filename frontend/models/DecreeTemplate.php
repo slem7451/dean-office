@@ -19,17 +19,49 @@ class DecreeTemplate extends ActiveRecord
         return '{{%decree_template}}';
     }
 
-    public static function findAllTemplatesWithCertificatesAsArray()
+    public static function findAllTemplatesWithCertificatesAsArray($name = null, $id = null, $type = null)
     {
         $templates = [];
-        $certificateTemplates = CertificateTemplate::find()->asArray()->all();
+        $certificateTemplates = CertificateTemplate::find();
+        $decreeTemplates = DecreeTemplate::find();
+        if ($name) {
+            $decreeTemplates->andWhere(['ilike', 'name', $name]);
+            $certificateTemplates->andWhere(['ilike', 'name', $name]);
+        }
+        if ($id) {
+            $decreeTemplates->andWhere(['ilike', 'id', $id]);
+            $certificateTemplates->andWhere(['ilike', 'id', $id]);
+        }
+        $decreeTemplates = $decreeTemplates->asArray()->all();
+        $certificateTemplates = $certificateTemplates->asArray()->all();
+        if ($type) {
+            switch ($type) {
+                case TemplateForm::TYPE_CERTIFICATE:
+                    foreach ($certificateTemplates as $certificateTemplate) {
+                        $templates[] = [
+                            'type' => TemplateForm::TYPE_CERTIFICATE,
+                            'template' => $certificateTemplate
+                        ];
+                    }
+                    return $templates;
+                case TemplateForm::TYPE_DECREE:
+                    foreach ($decreeTemplates as $decreeTemplate) {
+                        $templates[] = [
+                            'type' => TemplateForm::TYPE_DECREE,
+                            'template' => $decreeTemplate
+                        ];
+                    }
+                    return $templates;
+                default:
+                    break;
+            }
+        }
         foreach ($certificateTemplates as $certificateTemplate) {
             $templates[] = [
                 'type' => TemplateForm::TYPE_CERTIFICATE,
                 'template' => $certificateTemplate
             ];
         }
-        $decreeTemplates = DecreeTemplate::find()->asArray()->all();
         foreach ($decreeTemplates as $decreeTemplate) {
             $templates[] = [
                 'type' => TemplateForm::TYPE_DECREE,

@@ -35,8 +35,11 @@ class TemplateController extends Controller
         $model = new TemplateForm();
         $selectedTemplate = new TemplateForm();
         $templateExample = '';
+        $name = Yii::$app->request->get('TN');
+        $id = Yii::$app->request->get('TI');
+        $type = Yii::$app->request->get('TT');
 
-        $templates = DecreeTemplate::findAllTemplatesWithCertificatesAsArray();
+        $templates = DecreeTemplate::findAllTemplatesWithCertificatesAsArray($name, $id, $type);
         $dataProvider = new ArrayDataProvider([
             'allModels' => $templates,
             'pagination' => [
