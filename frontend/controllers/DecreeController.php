@@ -34,9 +34,13 @@ class DecreeController extends Controller
     {
         $model = new DecreeForm();
         $selectedDecree = new DecreeForm();
+        $name = Yii::$app->request->get('DN');
+        $id = Yii::$app->request->get('DI');
+        $created_at = Yii::$app->request->get('DC');
         $templates = DecreeTemplate::findAllDecrees();
         $students = Student::findAllNotClosedStudents();
-        $decrees = Decree::findDecrees();
+        $decrees = Decree::findDecrees($name, $id, $created_at);
+        $years = Decree::findYears();
 
         $dataProvider = new ActiveDataProvider([
             'query' => $decrees,
@@ -74,7 +78,8 @@ class DecreeController extends Controller
             'templates' => $templates,
             'students' => $students,
             'dataProvider' => $dataProvider,
-            'selectedDecree' => $selectedDecree
+            'selectedDecree' => $selectedDecree,
+            'years' => $years
         ]);
     }
 }
