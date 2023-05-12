@@ -20,9 +20,10 @@ $this->title = 'Группы';
     <div class="group-container">
         <div class="card card-outline card-primary">
             <div class="card-header">
-                <div class="card-title">
+                <div class="card-title col-10">
+                    <div class="row">
                     <?php
-                    $form = ActiveForm::begin(['id' => 'group-form']);
+                    $form = ActiveForm::begin(['id' => 'group-form', 'options' => ['class' => 'col-2']]);
                     Modal::begin([
                         'id' => 'group-modal',
                         'toggleButton' => ['label' => 'Создать группу', 'class' => 'btn btn-primary'],
@@ -41,7 +42,9 @@ $this->title = 'Группы';
                     ]);
                     Modal::end();
                     ActiveForm::end();
+                    echo $this->render('_group-filter', ['flows' => $flows, 'directions' => $directions]);
                     ?>
+                    </div>
                 </div>
                 <div class="card-tools">
                     <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i>
@@ -181,5 +184,53 @@ $this->registerJS(<<<JS
         });
         return false;
     })
+JS
+);
+
+$this->registerJS(<<<JS
+    $(document).on('input', '#group-search-name', function () {
+        $.pjax.reload({container: '#group-table-pjax', data: {
+            GN: $('#group-search-name').val(),
+            GF: $('#group-search-flow').val(),
+            GD: $('#group-search-direction').val(),
+            GC: $('#group-search-closed_at').val()
+            }, replace: false});
+    });
+JS
+);
+
+$this->registerJS(<<<JS
+    $(document).on('change', '#group-search-flow', function () {
+        $.pjax.reload({container: '#group-table-pjax', data: {
+            GN: $('#group-search-name').val(),
+            GF: $('#group-search-flow').val(),
+            GD: $('#group-search-direction').val(),
+            GC: $('#group-search-closed_at').val()
+            }, replace: false});
+    });
+JS
+);
+
+$this->registerJS(<<<JS
+    $(document).on('change', '#group-search-direction', function () {
+        $.pjax.reload({container: '#group-table-pjax', data: {
+            GN: $('#group-search-name').val(),
+            GF: $('#group-search-flow').val(),
+            GD: $('#group-search-direction').val(),
+            GC: $('#group-search-closed_at').val()
+            }, replace: false});
+    });
+JS
+);
+
+$this->registerJS(<<<JS
+    $(document).on('change', '#group-search-closed_at', function () {
+        $.pjax.reload({container: '#group-table-pjax', data: {
+            GN: $('#group-search-name').val(),
+            GF: $('#group-search-flow').val(),
+            GD: $('#group-search-direction').val(),
+            GC: $('#group-search-closed_at').val()
+            }, replace: false});
+    });
 JS
 );

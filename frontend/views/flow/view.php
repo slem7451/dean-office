@@ -22,9 +22,12 @@ $this->title = $flow->name;
     <div class="group-view-container">
         <div class="card card-outline card-primary">
             <div class="card-header">
-                <h3 class="card-title">
-                    Группы
-                </h3>
+                <div class="card-title col-10">
+                    <div class="row">
+                        <div class="mg-right-20-px col-1">Группы</div>
+                        <?= $this->render('/group/_group-filter', ['flows' => null, 'directions' => $directions]) ?>
+                    </div>
+                </div>
                 <div class="card-tools">
                     <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i>
                     </button>
@@ -163,5 +166,38 @@ $this->registerJS(<<<JS
         });
         return false;
     })
+JS
+);
+
+$this->registerJS(<<<JS
+    $(document).on('input', '#group-search-name', function () {
+        $.pjax.reload({container: '#group-table-pjax', data: {
+            GN: $('#group-search-name').val(),
+            GD: $('#group-search-direction').val(),
+            GC: $('#group-search-closed_at').val()
+            }, replace: false});
+    });
+JS
+);
+
+$this->registerJS(<<<JS
+    $(document).on('change', '#group-search-direction', function () {
+        $.pjax.reload({container: '#group-table-pjax', data: {
+            GN: $('#group-search-name').val(),
+            GD: $('#group-search-direction').val(),
+            GC: $('#group-search-closed_at').val()
+            }, replace: false});
+    });
+JS
+);
+
+$this->registerJS(<<<JS
+    $(document).on('change', '#group-search-closed_at', function () {
+        $.pjax.reload({container: '#group-table-pjax', data: {
+            GN: $('#group-search-name').val(),
+            GD: $('#group-search-direction').val(),
+            GC: $('#group-search-closed_at').val()
+            }, replace: false});
+    });
 JS
 );

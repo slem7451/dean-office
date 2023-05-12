@@ -47,9 +47,31 @@ class Group extends ActiveRecord
         return $this->hasMany(Student::class, ['id' => 'student_id'])->via('toStudents');
     }
 
-    public static function findGroups()
+    public static function findGroups($name = null, $flow = null, $direction = null, $closed_at = null)
     {
-        return self::find()->with(['flow', 'direction', 'students']);
+        $groups = self::find()->joinWith(['flow', 'direction'])->with(['students']);
+        if ($name) {
+            $groups->andWhere(['ilike', 'public.group.name', $name]);
+        }
+        if ($flow) {
+            $groups->andWhere(['flow.id' => $flow]);
+        }
+        if ($direction) {
+            $groups->andWhere(['direction.id' => $direction]);
+        }
+        if ($closed_at) {
+            switch ($closed_at) {
+                case 1:
+                    $groups->andWhere(['is', 'public.group.closed_at', new Expression('null')]);
+                    break;
+                case 2:
+                    $groups->andWhere(['is not', 'public.group.closed_at', new Expression('null')]);
+                    break;
+                default:
+                    break;
+            }
+        }
+        return $groups;
     }
 
     public static function findAllGroups()
@@ -74,12 +96,32 @@ class Group extends ActiveRecord
         return self::find()->where(['is', 'closed_at', new Expression('null')])->all();
     }
 
-    public static function findFlowsGroups($id)
+    public static function findFlowsGroups($id, $name = null, $direction = null, $closed_at = null)
     {
-        return self::find()
+        $groups = self::find()
             ->leftJoin('group_to_flow', 'public.group.id = group_to_flow.group_id')
             ->leftJoin('flow', 'flow.id = group_to_flow.flow_id')
+            ->joinWith('direction')
             ->where(['group_to_flow.flow_id' => $id]);
+        if ($name) {
+            $groups->andWhere(['ilike', 'public.group.name', $name]);
+        }
+        if ($direction) {
+            $groups->andWhere(['direction.id' => $direction]);
+        }
+        if ($closed_at) {
+            switch ($closed_at) {
+                case 1:
+                    $groups->andWhere(['is', 'public.group.closed_at', new Expression('null')]);
+                    break;
+                case 2:
+                    $groups->andWhere(['is not', 'public.group.closed_at', new Expression('null')]);
+                    break;
+                default:
+                    break;
+            }
+        }
+        return $groups;
     }
 
     public static function getStatistic()

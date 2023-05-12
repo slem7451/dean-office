@@ -87,7 +87,10 @@ class FlowController extends Controller
     {
         $selectedGroup = new GroupForm();
         $flow = Flow::findFlow($id);
-        $groups = Group::findFlowsGroups($id);
+        $name = Yii::$app->request->get('GN');
+        $direction = Yii::$app->request->get('GD');
+        $closed_at = Yii::$app->request->get('GC');
+        $groups = Group::findFlowsGroups($id, $name, $direction, $closed_at);
         $directions = Direction::findAllDirections();
         $flows = Flow::findAllNotClosedFlows();
         $dataProvider = new ActiveDataProvider([

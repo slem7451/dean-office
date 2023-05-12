@@ -40,7 +40,11 @@ class GroupController extends Controller
     {
         $model = new GroupForm();
         $selectedGroup = new GroupForm();
-        $groups = Group::findGroups();
+        $name = Yii::$app->request->get('GN');
+        $flow = Yii::$app->request->get('GF');
+        $direction = Yii::$app->request->get('GD');
+        $closed_at = Yii::$app->request->get('GC');
+        $groups = Group::findGroups($name, $flow, $direction, $closed_at);
         $directions = Direction::findAllDirections();
         $flows = Flow::findAllNotClosedFlows();
         $dataProvider = new ActiveDataProvider([
