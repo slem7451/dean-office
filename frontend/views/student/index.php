@@ -1,8 +1,10 @@
 <?php
 
+use common\helpers\GroupHelper;
 use frontend\models\CloseStudentForm;
 use yii\bootstrap5\ActiveForm;
 use yii\bootstrap4\Modal;
+use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\widgets\Pjax;
 
@@ -19,29 +21,51 @@ $this->title = 'Студенты';
     <div class="student-container">
         <div class="card card-outline card-primary">
             <div class="card-header">
-                <div class="card-title">
-                    <?php
-                    $form = ActiveForm::begin(['id' => 'student-form', 'options' => ['enctype' => 'multipart/form-data']]);
-                    Modal::begin([
-                        'id' => 'student-modal',
-                        'toggleButton' => ['label' => 'Создать студента', 'class' => 'btn btn-primary'],
-                        'size' => 'modal-lg',
-                        'title' => 'Создание студента',
-                        'footer' => Html::submitButton('Создать', ['class' => 'btn btn-success mg-right-76-p']) . Html::button('Закрыть', [
-                                'class' => 'btn btn-danger',
-                                'data-dismiss' => 'modal'
-                            ])
-                    ]);
-                    echo $this->render('_student-form-modal', [
-                        'model' => $model,
-                        'form' => $form,
-                        'groups' => $groups,
-                        'operation' => OPERATION_CREATE,
-                        'documents' => $documents
-                    ]);
-                    Modal::end();
-                    ActiveForm::end();
-                    ?>
+                <div class="card-title col-10">
+                    <div class="row">
+                        <?php
+                        $form = ActiveForm::begin(['id' => 'student-form', 'options' => ['enctype' => 'multipart/form-data', 'class' => 'col-2']]);
+                        Modal::begin([
+                            'id' => 'student-modal',
+                            'toggleButton' => ['label' => 'Создать студента', 'class' => 'btn btn-primary'],
+                            'size' => 'modal-lg',
+                            'title' => 'Создание студента',
+                            'footer' => Html::submitButton('Создать', ['class' => 'btn btn-success mg-right-76-p']) . Html::button('Закрыть', [
+                                    'class' => 'btn btn-danger',
+                                    'data-dismiss' => 'modal'
+                                ])
+                        ]);
+                        echo $this->render('_student-form-modal', [
+                            'model' => $model,
+                            'form' => $form,
+                            'groups' => $groups,
+                            'operation' => OPERATION_CREATE,
+                            'documents' => $documents
+                        ]);
+                        Modal::end();
+                        ActiveForm::end();
+                        echo Html::input('string', 'student-full_name', null, [
+                            'placeholder' => 'ФИО студента',
+                            'class' => 'form-control col-2 mg-right-20-px',
+                            'id' => 'student-search-full_name'
+                        ]);
+                        echo Html::dropDownList('group-select', null, ArrayHelper::map($groups, 'id', function ($model) {
+                            return GroupHelper::getFullName($model);
+                        }), [
+                            'class' => 'form-select col-2 mg-right-20-px',
+                            'prompt' => 'Все группы',
+                            'id' => 'student-search-group'
+                        ]);
+                        echo Html::dropDownList('group-select', null, [
+                            0 => 'Все студенты',
+                            1 => 'Обучается',
+                            2 => 'Отчислен'
+                        ], [
+                            'class' => 'form-select col-2 mg-right-20-px',
+                            'id' => 'student-search-closed_at'
+                        ]);
+                        ?>
+                    </div>
                 </div>
                 <div class="card-tools">
                     <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i>
@@ -280,5 +304,38 @@ $this->registerJS(<<<JS
         });
         return false;
     })
+JS
+);
+
+$this->registerJS(<<<JS
+    $(document).on('input', '#student-search-full_name', function () {
+        $.pjax.reload({container: '#student-table-pjax', data: {
+            SFU: $('#student-search-full_name').val(),
+            SG: $('#student-search-group').val(),
+            SC: $('#student-search-closed_at').val()
+            }, replace: false});
+    });
+JS
+);
+
+$this->registerJS(<<<JS
+    $(document).on('change', '#student-search-group', function () {
+        $.pjax.reload({container: '#student-table-pjax', data: {
+            SFU: $('#student-search-full_name').val(),
+            SG: $('#student-search-group').val(),
+            SC: $('#student-search-closed_at').val()
+            }, replace: false});
+    });
+JS
+);
+
+$this->registerJS(<<<JS
+    $(document).on('change', '#student-search-closed_at', function () {
+        $.pjax.reload({container: '#student-table-pjax', data: {
+            SFU: $('#student-search-full_name').val(),
+            SG: $('#student-search-group').val(),
+            SC: $('#student-search-closed_at').val()
+            }, replace: false});
+    });
 JS
 );

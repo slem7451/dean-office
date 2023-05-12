@@ -42,9 +42,12 @@ class StudentController extends Controller
         $model = new StudentForm();
         $closeStudentForm = new CloseStudentForm();
         $selectedStudent = new StudentForm();
+        $full_name = Yii::$app->request->get('SFU');
+        $group = Yii::$app->request->get('SG');
+        $closed_at = Yii::$app->request->get('SC');
         $decrees = DecreeTemplate::findAllDecrees();
         $groups = Group::findAllNotClosedGroups();
-        $students = Student::findStudents();
+        $students = Student::findStudents($full_name, $group, $closed_at);
         $documents = [];
         $dataProvider = new ActiveDataProvider([
             'query' => $students,

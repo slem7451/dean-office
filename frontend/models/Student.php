@@ -55,9 +55,28 @@ class Student extends ActiveRecord
         return self::findOne(['id' => $id]);
     }
 
-    public static function findStudents()
+    public static function findStudents($full_name = null, $group = null, $closed_at = null)
     {
-        return self::find()->with('group');
+        $students = self::find()->joinWith('group');
+        if ($full_name) {
+            $students->andWhere(['ilike', 'CONCAT_WS(second_name, first_name, patronymic)', $full_name]);
+        }
+        if ($closed_at) {
+            switch ($closed_at) {
+                case 1:
+                    $students->andWhere(['is', 'student.closed_at', new Expression('null')]);
+                    break;
+                case 2:
+                    $students->andWhere(['is not', 'student.closed_at', new Expression('null')]);
+                    break;
+                default:
+                    break;
+            }
+        }
+        if ($group) {
+            $students->andWhere(['group_id' => $group]);
+        }
+        return $students;
     }
 
     public static function findStudentsByText($text)

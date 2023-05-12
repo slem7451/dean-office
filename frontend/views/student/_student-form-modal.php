@@ -9,6 +9,7 @@
 
 /** @var array $documents */
 
+use common\helpers\GroupHelper;
 use frontend\models\Student;
 use frontend\models\StudentForm;
 use kartik\date\DatePicker;
@@ -23,7 +24,9 @@ echo $form->field($model, 'patronymic')->textInput(['placeholder' => 'Отчес
     <div class="row mg-bottom-15px">
         <?php
         echo $form->field($model, 'group', ['options' => ['class' => 'col-6']])
-            ->dropDownList(ArrayHelper::map($groups, 'id', 'name'), [
+            ->dropDownList(ArrayHelper::map($groups, 'id', function($model) {
+                return GroupHelper::getFullName($model);
+            }), [
                 'prompt' => ['text' => 'Группа', 'options' => ['disabled' => true, 'selected' => true]],
                 'id' => 'groups-for-student-' . $operation
             ])
