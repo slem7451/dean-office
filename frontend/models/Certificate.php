@@ -14,6 +14,8 @@ use yii\db\ActiveRecord;
 
 class Certificate extends ActiveRecord
 {
+    public $certificate_year;
+
     public static function tableName()
     {
         return '{{%certificate}}';
@@ -34,9 +36,19 @@ class Certificate extends ActiveRecord
         return $this->hasMany(Student::class, ['id' => 'student_id'])->via('toStudents');
     }
 
-    public static function findCertificates()
+    public static function findCertificates($name = null, $id = null, $created_at = null)
     {
-        return self::find()->with('template', 'students');
+        $certificates = self::find()->joinWith(['template'])->with(['students']);
+        if ($name) {
+            $certificates->andWhere(['ilike', 'certificate_template.name', $name]);
+        }
+        if ($id) {
+            $certificates->andWhere(['ilike', 'template_id', $id]);
+        }
+        if ($created_at) {
+            $certificates->andWhere(["DATE_PART('year', certificate.created_at)" => $created_at]);
+        }
+        return $certificates;
     }
 
     public static function findCertificate($id)
@@ -65,5 +77,10 @@ class Certificate extends ActiveRecord
             }
         }
         return $statistic;
+    }
+
+    public static function findYears()
+    {
+        return self::find()->select(["DATE_PART('year', created_at) as certificate_year"])->groupBy(["DATE_PART('year', created_at)"])->all();
     }
 }

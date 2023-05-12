@@ -34,9 +34,13 @@ class CertificateController extends Controller
     {
         $model = new CertificateForm();
         $selectedCertificate = new CertificateForm();
+        $name = Yii::$app->request->get('CN');
+        $id = Yii::$app->request->get('CI');
+        $created_at = Yii::$app->request->get('CC');
         $templates = CertificateTemplate::findAllCertificates();
         $students = Student::findAllNotClosedStudents();
-        $certificates = Certificate::findCertificates();
+        $certificates = Certificate::findCertificates($name, $id, $created_at);
+        $years = Certificate::findYears();
 
         $dataProvider = new ActiveDataProvider([
             'query' => $certificates,
@@ -74,7 +78,8 @@ class CertificateController extends Controller
             'templates' => $templates,
             'students' => $students,
             'dataProvider' => $dataProvider,
-            'selectedCertificate' => $selectedCertificate
+            'selectedCertificate' => $selectedCertificate,
+            'years' => $years
         ]);
     }
 }

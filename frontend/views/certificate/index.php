@@ -3,12 +3,13 @@
 /** @var \frontend\models\CertificateForm $selectedCertificate */
 /** @var \frontend\models\CertificateTemplate $templates */
 /** @var \frontend\models\Student $students */
-
+/** @var \frontend\models\Certificate $years */
 /** @var \yii\data\ActiveDataProvider $dataProvider */
 
 use yii\bootstrap4\Modal;
 use yii\bootstrap5\ActiveForm;
 use yii\grid\GridView;
+use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\widgets\Pjax;
 
@@ -25,9 +26,10 @@ $deleteIcon = '<svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fi
     <div class="certificate-container">
         <div class="card card-outline card-primary">
             <div class="card-header">
-                <div class="card-title">
+                <div class="card-title col-10">
+                    <div class="row">
                     <?php
-                    $form = ActiveForm::begin(['id' => 'certificate-form']);
+                    $form = ActiveForm::begin(['id' => 'certificate-form', 'options' => ['class' => 'col-2']]);
                     Modal::begin([
                         'id' => 'certificate-modal',
                         'toggleButton' => ['label' => 'Сделать справку', 'class' => 'btn btn-primary'],
@@ -47,7 +49,23 @@ $deleteIcon = '<svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fi
                     ]);
                     Modal::end();
                     ActiveForm::end();
+                    echo Html::input('string', 'certificate-template_id', null, [
+                        'placeholder' => 'Номер справки',
+                        'class' => 'form-control col-2 mg-right-20-px',
+                        'id' => 'certificate-search-template_id'
+                    ]);
+                    echo Html::input('string', 'certificate-template_name', null, [
+                        'placeholder' => 'Название справки',
+                        'class' => 'form-control col-2 mg-right-20-px',
+                        'id' => 'certificate-search-template_name'
+                    ]);
+                    echo Html::dropDownList('created_at-select', null, ArrayHelper::map($years, 'certificate_year', 'certificate_year'), [
+                        'class' => 'form-select col-2',
+                        'id' => 'certificate-search-created_at',
+                        'prompt' => 'Все года'
+                    ]);
                     ?>
+                    </div>
                 </div>
                 <div class="card-tools">
                     <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i>
@@ -260,5 +278,38 @@ $this->registerJS(<<<JS
         });
         return false;
     })
+JS
+);
+
+$this->registerJS(<<<JS
+    $(document).on('input', '#certificate-search-template_name', function () {
+        $.pjax.reload({container: '#certificate-table-pjax', data: {
+            CN: $('#certificate-search-template_name').val(),
+            CI: $('#certificate-search-template_id').val(),
+            CC: $('#certificate-search-created_at').val()
+            }, replace: false});
+    });
+JS
+);
+
+$this->registerJS(<<<JS
+    $(document).on('input', '#certificate-search-template_id', function () {
+        $.pjax.reload({container: '#certificate-table-pjax', data: {
+            CN: $('#certificate-search-template_name').val(),
+            CI: $('#certificate-search-template_id').val(),
+            CC: $('#certificate-search-created_at').val()
+            }, replace: false});
+    });
+JS
+);
+
+$this->registerJS(<<<JS
+    $(document).on('change', '#certificate-search-created_at', function () {
+        $.pjax.reload({container: '#certificate-table-pjax', data: {
+            CN: $('#certificate-search-template_name').val(),
+            CI: $('#certificate-search-template_id').val(),
+            CC: $('#certificate-search-created_at').val()
+            }, replace: false});
+    });
 JS
 );
