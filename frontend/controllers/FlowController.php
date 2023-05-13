@@ -9,6 +9,7 @@ use frontend\models\Flow;
 use frontend\models\FlowForm;
 use frontend\models\Group;
 use frontend\models\GroupForm;
+use frontend\models\Student;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
@@ -44,6 +45,9 @@ class FlowController extends Controller
         $years = Flow::getYearFlows();
         $decrees = DecreeTemplate::findAllDecrees();
         $flows = Flow::findFlows($name, $year, $closed_at);
+        $studentStatistic = Student::getDynamicStatistic();
+        $flow = Yii::$app->request->get('FSN');
+        $statisticForStudents = Student::getStatisticForFlow($flow);
 
         $dataProvider = new ActiveDataProvider([
             'query' => $flows,
@@ -84,7 +88,9 @@ class FlowController extends Controller
             'selectedFlow' => $selectedFlow,
             'closeStudentForm' => $closeStudentForm,
             'decrees' => $decrees,
-            'years' => $years
+            'years' => $years,
+            'studentStatistic' => $studentStatistic,
+            'statisticForStudents' => $statisticForStudents
         ]);
     }
 

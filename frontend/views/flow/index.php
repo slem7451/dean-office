@@ -1,6 +1,7 @@
 <?php
 
 use common\helpers\DateHelper;
+use dosamigos\chartjs\ChartJs;
 use frontend\models\CloseStudentForm;
 use yii\bootstrap4\Modal;
 use yii\bootstrap5\ActiveForm;
@@ -15,6 +16,8 @@ use yii\widgets\Pjax;
 /** @var \frontend\models\CloseStudentForm $closeStudentForm */
 /** @var \frontend\models\DecreeTemplate $decrees */
 /** @var \frontend\models\Flow $years */
+/** @var array $studentStatistic */
+/** @var array $statisticForStudents */
 
 $this->title = 'Потоки';
 
@@ -32,43 +35,43 @@ $closeIcon = '<svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fil
             <div class="card-header">
                 <div class="card-title col-10">
                     <div class="row">
-                    <?php
-                    $form = ActiveForm::begin(['id' => 'flow-form', 'options' => ['class' => 'col-2']]);
-                    Modal::begin([
-                        'id' => 'flow-modal',
-                        'toggleButton' => ['label' => 'Создать поток', 'class' => 'btn btn-primary'],
-                        'title' => 'Создание потока',
-                        'footer' => Html::submitButton('Создать', ['class' => 'btn btn-success mg-right-61-p']) . Html::button('Закрыть', [
-                                'class' => 'btn btn-danger',
-                                'data-dismiss' => 'modal'
-                            ])
-                    ]);
-                    echo $this->render('_flow-form-modal', [
-                        'form' => $form,
-                        'model' => $model,
-                        'operation' => OPERATION_CREATE
-                    ]);
-                    Modal::end();
-                    ActiveForm::end();
-                    echo Html::input('string', 'flow-name', null, [
-                        'placeholder' => 'Название потока',
-                        'class' => 'form-control col-2 mg-right-20-px',
-                        'id' => 'flow-search-name'
-                    ]);
-                    echo Html::dropDownList('created-select', null, ArrayHelper::map($years, 'flow_year', 'flow_year'), [
-                        'class' => 'form-select col-2 mg-right-20-px',
-                        'prompt' => 'Все года',
-                        'id' => 'flow-search-created_at'
-                    ]);
-                    echo Html::dropDownList('closed-select', null, [
-                        0 => 'Все потоки',
-                        1 => 'На обучении',
-                        2 => 'Выпущен'
-                    ], [
-                        'class' => 'form-select col-2 mg-right-20-px',
-                        'id' => 'flow-search-closed_at'
-                    ]);
-                    ?>
+                        <?php
+                        $form = ActiveForm::begin(['id' => 'flow-form', 'options' => ['class' => 'col-2']]);
+                        Modal::begin([
+                            'id' => 'flow-modal',
+                            'toggleButton' => ['label' => 'Создать поток', 'class' => 'btn btn-primary'],
+                            'title' => 'Создание потока',
+                            'footer' => Html::submitButton('Создать', ['class' => 'btn btn-success mg-right-61-p']) . Html::button('Закрыть', [
+                                    'class' => 'btn btn-danger',
+                                    'data-dismiss' => 'modal'
+                                ])
+                        ]);
+                        echo $this->render('_flow-form-modal', [
+                            'form' => $form,
+                            'model' => $model,
+                            'operation' => OPERATION_CREATE
+                        ]);
+                        Modal::end();
+                        ActiveForm::end();
+                        echo Html::input('string', 'flow-name', null, [
+                            'placeholder' => 'Название потока',
+                            'class' => 'form-control col-2 mg-right-20-px',
+                            'id' => 'flow-search-name'
+                        ]);
+                        echo Html::dropDownList('created-select', null, ArrayHelper::map($years, 'flow_year', 'flow_year'), [
+                            'class' => 'form-select col-2 mg-right-20-px',
+                            'prompt' => 'Все года',
+                            'id' => 'flow-search-created_at'
+                        ]);
+                        echo Html::dropDownList('closed-select', null, [
+                            0 => 'Все потоки',
+                            1 => 'На обучении',
+                            2 => 'Выпущен'
+                        ], [
+                            'class' => 'form-select col-2 mg-right-20-px',
+                            'id' => 'flow-search-closed_at'
+                        ]);
+                        ?>
                     </div>
                 </div>
                 <div class="card-tools">
@@ -133,6 +136,163 @@ $closeIcon = '<svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fil
                 ]);
                 Pjax::end();
                 ?>
+            </div>
+        </div>
+        <div class="card card-outline card-secondary collapsed-card">
+            <div class="card-header">
+                <div class="card-title">
+                    Динамика поступивших
+                </div>
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-plus"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                <?= ChartJs::widget([
+                    'type' => 'line',
+                    'options' => [
+                        'height' => 400,
+                        'width' => 1500
+                    ],
+                    'data' => [
+                        'labels' => ArrayHelper::getColumn($studentStatistic, 'year'),
+                        'datasets' => [
+                            [
+                                'label' => 'Кол-во поступивших',
+                                'backgroundColor' => "rgba(179,181,198,0.2)",
+                                'borderColor' => 'rgb(75, 192, 192)',
+                                'pointBackgroundColor' => 'rgb(75, 150, 192)',
+                                'pointBorderColor' => "#fff",
+                                'pointHoverBackgroundColor' => "#fff",
+                                'pointHoverBorderColor' => 'rgb(75, 143, 192)',
+                                'fill' => false,
+                                'data' => ArrayHelper::getColumn($studentStatistic, 'studentCount'),
+                                'pointHitRadius' => 10
+                            ]
+                        ]
+                    ],
+                    'clientOptions' => [
+                        'legend' => [
+                            'display' => false
+                        ],
+                        'scales' => [
+                            'yAxes' => [
+                                [
+                                    'ticks' => [
+                                        'min' => 0,
+                                        'precision' => 0
+                                    ]
+                                ]
+                            ]
+                        ],
+                    ]
+                ]);
+                ?>
+            </div>
+        </div>
+        <div class="card card-outline card-secondary collapsed-card">
+            <div class="card-header">
+                <div class="card-title col-10">
+                    <div class="row">
+                        <div class="col-2">
+                            Статистика по студентам
+                        </div>
+                        <?= Html::dropDownList('flow-select', null, ArrayHelper::map($dataProvider->models, 'id', 'name'), [
+                            'class' => 'form-select col-2',
+                            'id' => 'flow-select-name',
+                            'prompt' => 'Поток'
+                        ]) ?>
+                    </div>
+                </div>
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-plus"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                <?php Pjax::begin(['id' => 'student-stat-pjax']); ?>
+                <?= ChartJs::widget([
+                    'type' => 'doughnut',
+                    'data' => [
+                        'labels' => ['Отчисленные', 'Обучаются'],
+                        'datasets' => [
+                            [
+                                'data' => [$statisticForStudents['closedStudents'], $statisticForStudents['openedStudents']],
+                                'label' => '',
+                                'backgroundColor' => [
+                                    '#dc3545',
+                                    '#28a745'
+                                ],
+                                'borderColor' => [
+                                    '#fff',
+                                    '#fff'
+                                ],
+                                'borderWidth' => 1,
+                                'hoverBorderColor' => ["#999", "#999"]
+                            ]
+                        ]
+                    ]
+                ]) ?>
+                <div class="row">
+                    <div class="col-6">
+                <?= ChartJs::widget([
+                    'type' => 'doughnut',
+                    'options' => [
+                        'height' => 400,
+                        'width' => 400
+                    ],
+                    'data' => [
+                        'labels' => ['Бюджет', 'Контракт'],
+                        'datasets' => [
+                            [
+                                'data' => [$statisticForStudents['budgetStudents'], $statisticForStudents['contractStudents']],
+                                'label' => '',
+                                'backgroundColor' => [
+                                    '#007bff',
+                                    '#6c757d'
+                                ],
+                                'borderColor' => [
+                                    '#fff',
+                                    '#fff'
+                                ],
+                                'borderWidth' => 1,
+                                'hoverBorderColor' => ["#999", "#999"]
+                            ]
+                        ]
+                    ]
+                ]) ?>
+                    </div>
+                <div class="col-6">
+                <?= ChartJs::widget([
+                    'type' => 'doughnut',
+                    'options' => [
+                        'height' => 400,
+                        'width' => 400
+                    ],
+                    'data' => [
+                        'labels' => ['Мальчики', 'Девочки'],
+                        'datasets' => [
+                            [
+                                'data' => [$statisticForStudents['manStudents'], $statisticForStudents['womanStudents']],
+                                'label' => '',
+                                'backgroundColor' => [
+                                    'lightblue',
+                                    'pink'
+                                ],
+                                'borderColor' => [
+                                    '#fff',
+                                    '#fff'
+                                ],
+                                'borderWidth' => 1,
+                                'hoverBorderColor' => ["#999", "#999"]
+                            ]
+                        ]
+                    ]
+                ]) ?>
+                </div>
+                </div>
+                <?php Pjax::end(); ?>
             </div>
         </div>
     </div>
@@ -327,6 +487,13 @@ $this->registerJS(<<<JS
             FO: $('#flow-search-created_at').val(),
             FC: $('#flow-search-closed_at').val()
             }, replace: false});
+    });
+JS
+);
+
+$this->registerJS(<<<JS
+    $(document).on('change', '#flow-select-name', function () {
+        $.pjax.reload({container: '#student-stat-pjax', data: {FSN: $('#flow-select-name').val()}, replace: false});
     });
 JS
 );

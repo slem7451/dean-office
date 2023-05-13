@@ -25,6 +25,8 @@ class Student extends ActiveRecord
     const BUDGET_PAYMENT = 0;
     const CONTRACT_PAYMENT = 1;
 
+    public $student_year;
+
     public static function tableName()
     {
         return '{{%student}}';
@@ -151,5 +153,60 @@ class Student extends ActiveRecord
             'budgetStudents' => $budgetStudents,
             'contractStudents' => $contractStudents
         ];
+    }
+
+    public static function getStatisticForFlow($flow_id)
+    {
+        $groupsToFlow = GroupToFlow::find()->select(['group_id'])->where(['flow_id' => $flow_id])->asArray()->all();
+        $studentsToGroup = StudentToGroup::find()->select(['student_id as id'])->where(['in', 'group_id', $groupsToFlow])->asArray()->groupBy(['student_id'])->all();
+        $closedStudents = Student::find()
+            ->where(['is not', 'closed_at', new Expression('null')])
+            ->andWhere(['in', 'id', $studentsToGroup])
+            ->count();
+        $openedStudents = Student::find()
+            ->where(['is', 'closed_at', new Expression('null')])
+            ->andWhere(['in', 'id', $studentsToGroup])
+            ->count();
+        $budgetStudents = Student::find()
+            ->where(['payment' => self::BUDGET_PAYMENT])
+            ->andWhere(['is', 'closed_at', new Expression('null')])
+            ->andWhere(['in', 'id', $studentsToGroup])
+            ->count();
+        $contractStudents = Student::find()
+            ->where(['payment' => self::CONTRACT_PAYMENT])
+            ->andWhere(['is', 'closed_at', new Expression('null')])
+            ->andWhere(['in', 'id', $studentsToGroup])
+            ->count();
+        $manStudents = Student::find()
+            ->where(['sex' => StudentForm::MALE])
+            ->andWhere(['is', 'closed_at', new Expression('null')])
+            ->andWhere(['in', 'id', $studentsToGroup])
+            ->count();
+        $womanStudents = Student::find()
+            ->where(['sex' => StudentForm::FEMALE])
+            ->andWhere(['is', 'closed_at', new Expression('null')])
+            ->andWhere(['in', 'id', $studentsToGroup])
+            ->count();
+        return [
+            'closedStudents' => $closedStudents,
+            'openedStudents' => $openedStudents,
+            'budgetStudents' => $budgetStudents,
+            'contractStudents' => $contractStudents,
+            'manStudents' => $manStudents,
+            'womanStudents' => $womanStudents
+        ];
+    }
+
+    public static function getDynamicStatistic()
+    {
+        $statistic = [];
+        $years = self::find()->select(["DATE_PART('year', created_at) as student_year"])->groupBy(["DATE_PART('year', created_at)"])->all();
+        foreach ($years as $year) {
+            $statistic[] = [
+                'year' => $year->student_year,
+                'studentCount' => self::find()->where(["DATE_PART('year', created_at)" => $year->student_year])->count()
+            ];
+        }
+        return $statistic;
     }
 }
