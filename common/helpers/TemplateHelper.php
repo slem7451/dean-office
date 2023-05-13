@@ -38,7 +38,7 @@ class TemplateHelper
         $template = str_replace('$STUDENT_P$', Yii::$app->inflection->inflectName($student->second_name . ' ' . $student->first_name . ($student->patronymic ? ' ' . $student->patronymic : ''), Inflector::PREPOSITIONAL), $template);
         $template = str_replace('$GROUP$', $student->group->name, $template);
         $template = str_replace('$DIR$', $student->group->direction->id, $template);
-        $template = str_replace('$DIR_N$', $student->group->direction->name, $template);
+        $template = str_replace('$DIR_N$', $student->group->direction->full_name, $template);
         $template = str_replace('$PAY$', $student->payment == Student::BUDGET_PAYMENT ? self::BUDGET_PAY : self::CONTRACT_PAY, $template);
         $template = str_replace('$DATE_B$', DateHelper::normalizeDate($toStudent->created_at) . ' г.', $template);
         if ($toStudent->closed_at) {

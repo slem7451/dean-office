@@ -4,6 +4,7 @@ namespace frontend\controllers;
 
 use common\helpers\StatisticHelper;
 use frontend\models\CloseStudentForm;
+use frontend\models\Decree;
 use frontend\models\DecreeTemplate;
 use frontend\models\Direction;
 use frontend\models\DirectionForm;
@@ -93,11 +94,15 @@ class GroupController extends Controller
         $group = Group::findGroup($id);
         $closeStudentForm = new CloseStudentForm();
         $decrees = DecreeTemplate::findAllDecrees();
+        $years = Decree::findYears();
         $students = Student::findStudentsByGroupId($group->id);
         $allStudents = Student::findStudentsNotInGroup($group->id);
         $selectedStudent = new StudentForm();
         $groups = Group::findAllNotClosedGroups();
         $documents = [];
+        $decree_name = Yii::$app->request->get('SDN');
+        $decree_year = Yii::$app->request->get('SDY');
+        $studentsDecree = Student::findStudentsDecree($decree_name, $decree_year, $group->id);
 
         if (Yii::$app->request->isPjax && Yii::$app->request->get('idUS')) {
             $id = Yii::$app->request->get('idUS');
@@ -107,6 +112,16 @@ class GroupController extends Controller
         if(Yii::$app->request->isAjax && Yii::$app->request->post('students')) {
             StudentToGroup::addStudents($id, Yii::$app->request->post('students'));
         }
+
+        $decreeDataProvider = new ActiveDataProvider([
+            'query' => $studentsDecree,
+            'pagination' => [
+                'pageSize' => 20
+            ],
+            'sort' => [
+                'defaultOrder' => ['id' => SORT_DESC],
+            ]
+        ]);
 
         $studentsDataProvider = new ActiveDataProvider([
             'query' => $students,
@@ -123,7 +138,9 @@ class GroupController extends Controller
             'allStudents' => $allStudents,
             'documents' => $documents,
             'closeStudentForm' => $closeStudentForm,
-            'decrees' => $decrees
+            'decrees' => $decrees,
+            'years' => $years,
+            'decreeDataProvider' => $decreeDataProvider
         ]);
     }
 

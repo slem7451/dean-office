@@ -12,9 +12,11 @@ use yii\widgets\Pjax;
 /** @var \frontend\models\StudentForm $selectedStudent */
 /** @var \frontend\models\Group $groups */
 /** @var \yii\data\ActiveDataProvider $dataProvider */
+/** @var \yii\data\ActiveDataProvider $decreeDataProvider */
 /** @var array $documents */
 /** @var \frontend\models\CloseStudentForm $closeStudentForm */
 /** @var \frontend\models\DecreeTemplate $decrees */
+/** @var \frontend\models\Decree $years */
 
 $this->title = 'Студенты';
 ?>
@@ -80,6 +82,7 @@ $this->title = 'Студенты';
                 ?>
             </div>
         </div>
+        <?= $this->render('_student-statistic', ['years' => $years, 'decrees' => $decrees, 'dataProvider' => $decreeDataProvider]) ?>
     </div>
     <div id="btn-clicked" class="none-display">0</div>
 <?php

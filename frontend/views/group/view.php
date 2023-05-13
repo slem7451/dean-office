@@ -16,6 +16,10 @@
 
 /** @var \frontend\models\DecreeTemplate $decrees */
 
+/** @var \yii\data\ActiveDataProvider $decreeDataProvider */
+
+/** @var \frontend\models\Decree $years */
+
 use common\helpers\GroupHelper;
 use frontend\models\CloseStudentForm;
 use kartik\select2\Select2;
@@ -72,6 +76,7 @@ $this->title = GroupHelper::getFullName($group);
                 ?>
             </div>
         </div>
+        <?= $this->render('/student/_student-statistic', ['years' => $years, 'decrees' => $decrees, 'dataProvider' => $decreeDataProvider]) ?>
     </div>
     <div id="btn-clicked" class="none-display">0</div>
 <?php

@@ -19,7 +19,6 @@ use yii\db\Expression;
  * @property date $created_at
  * @property date $closed_at
  */
-
 class Student extends ActiveRecord
 {
     const BUDGET_PAYMENT = 0;
@@ -208,5 +207,27 @@ class Student extends ActiveRecord
             ];
         }
         return $statistic;
+    }
+
+    public static function findStudentsDecree($decree_name, $decree_year, $group_id = null)
+    {
+        $students = self::find();
+        $decreeTemplates = DecreeTemplate::find()->select(['id as template_id']);
+        if ($decree_name) {
+            $decreeTemplates->andWhere(['name' => $decree_name])->asArray()->all();
+        }
+        $decreeTemplates = $decreeTemplates->asArray()->all();
+        $decrees = Decree::find()->select(['id as decree_id'])->where(['in', 'template_id', $decreeTemplates]);
+        if ($decree_year) {
+            $decrees->andWhere(["DATE_PART('year', created_at)" => $decree_year]);
+        }
+        $decrees->asArray()->all();
+        $studentToDecrees = DecreeToStudent::find()->select(['student_id as id'])->where(['in', 'decree_id', $decrees])->asArray()->groupBy(['student_id'])->all();
+        $students->andWhere(['in', 'id', $studentToDecrees]);
+        if ($group_id) {
+            $studentsToGroup = StudentToGroup::find()->select(['student_id as id'])->where(['group_id' => $group_id])->asArray()->all();
+            $students->andWhere(['in', 'id', $studentsToGroup]);
+        }
+        return $students;
     }
 }

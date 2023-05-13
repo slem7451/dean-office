@@ -4,6 +4,7 @@ namespace frontend\controllers;
 
 use frontend\models\CertificateToStudent;
 use frontend\models\CloseStudentForm;
+use frontend\models\Decree;
 use frontend\models\DecreeTemplate;
 use frontend\models\DecreeToStudent;
 use frontend\models\DocumentForm;
@@ -46,9 +47,24 @@ class StudentController extends Controller
         $group = Yii::$app->request->get('SG');
         $closed_at = Yii::$app->request->get('SC');
         $decrees = DecreeTemplate::findAllDecrees();
+        $years = Decree::findYears();
         $groups = Group::findAllNotClosedGroups();
         $students = Student::findStudents($full_name, $group, $closed_at);
         $documents = [];
+        $decree_name = Yii::$app->request->get('SDN');
+        $decree_year = Yii::$app->request->get('SDY');
+        $studentsDecree = Student::findStudentsDecree($decree_name, $decree_year);
+
+        $decreeDataProvider = new ActiveDataProvider([
+            'query' => $studentsDecree,
+            'pagination' => [
+                'pageSize' => 20
+            ],
+            'sort' => [
+                'defaultOrder' => ['id' => SORT_DESC],
+            ]
+        ]);
+
         $dataProvider = new ActiveDataProvider([
             'query' => $students,
             'pagination' => [
@@ -95,7 +111,9 @@ class StudentController extends Controller
             'selectedStudent' => $selectedStudent,
             'documents' => $documents,
             'closeStudentForm' => $closeStudentForm,
-            'decrees' => $decrees
+            'decrees' => $decrees,
+            'years' => $years,
+            'decreeDataProvider' => $decreeDataProvider
         ]);
     }
 
