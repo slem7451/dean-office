@@ -2,6 +2,7 @@
 
 namespace frontend\controllers;
 
+use common\helpers\StatisticHelper;
 use frontend\models\CloseStudentForm;
 use frontend\models\DecreeTemplate;
 use frontend\models\Direction;
@@ -131,6 +132,12 @@ class GroupController extends Controller
         $model = new DirectionForm();
         $selectedDirection = new DirectionForm();
         $directions = Direction::findDirections();
+        $years = Group::getYears();
+        $year = Yii::$app->request->get('DY') ?: date('Y');
+        $statistic = Direction::getStatistic($year);
+        $groupsStatistic = Group::getStatistic($year);
+        StatisticHelper::getColorsForGroupDirection($statistic, $groupsStatistic);
+
         $dataProvider = new ActiveDataProvider([
             'query' => $directions,
             'pagination' => [
@@ -167,7 +174,10 @@ class GroupController extends Controller
         return $this->render('direction', [
             'model' => $model,
             'selectedDirection' => $selectedDirection,
-            'dataProvider' => $dataProvider
+            'dataProvider' => $dataProvider,
+            'years' => $years,
+            'statistic' => $statistic,
+            'groupsStatistic' => $groupsStatistic
         ]);
     }
 }

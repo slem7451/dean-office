@@ -17,6 +17,8 @@ use yii\db\Expression;
 
 class Group extends ActiveRecord
 {
+    public $group_year;
+
     public static function tableName()
     {
         return '{{%group}}';
@@ -124,16 +126,23 @@ class Group extends ActiveRecord
         return $groups;
     }
 
-    public static function getStatistic()
+    public static function getStatistic($year = null)
     {
+        $year = $year ?: date('Y');
         $statistic = [];
-        $groups = self::find()->where(["DATE_PART('year', created_at)" => date('Y')])->all();
+        $groups = self::find()->where(["DATE_PART('year', created_at)" => $year])->all();
         foreach ($groups as $group) {
             $statistic[] = [
                 'name' => $group->name,
-                'studentCount' => StudentToGroup::find()->where(['group_id' => $group->id])->andWhere(['is', 'closed_at', new Expression('null')])->count()
+                'studentCount' => StudentToGroup::find()->where(['group_id' => $group->id])->andWhere(['is', 'closed_at', new Expression('null')])->count(),
+                'direction' => $group->direction->id
             ];
         }
         return $statistic;
+    }
+
+    public static function getYears()
+    {
+        return self::find()->select(["DATE_PART('year', created_at) as group_year"])->groupBy(["DATE_PART('year', created_at)"])->orderBy(['group_year' => SORT_DESC])->all();
     }
 }

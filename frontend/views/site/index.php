@@ -23,7 +23,7 @@ use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\jui\AutoComplete;
 
-$this->title = 'Главная';
+$this->title = Yii::$app->name;
 
 ?>
     <div class="site-index">

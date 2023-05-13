@@ -2,6 +2,7 @@
 
 namespace frontend\models;
 
+use common\helpers\StatisticHelper;
 use yii\db\ActiveRecord;
 
 /**
@@ -44,5 +45,21 @@ class Direction extends ActiveRecord
     public static function findAllDirections()
     {
         return self::find()->all();
+    }
+
+    public static function getStatistic($year)
+    {
+        $statistic = [];
+        $directions = self::find()->all();
+        foreach ($directions as $direction) {
+            $groupCount = Group::find()->where(["DATE_PART('year', created_at)" => $year, 'direction_id' => $direction->id])->count();
+            $statistic[] = [
+                'name' => $direction->id . ' ' . $direction->short_name,
+                'count' => $groupCount,
+                'color' => StatisticHelper::getRandomColor(),
+                'id' => $direction->id
+            ];
+        }
+        return $statistic;
     }
 }

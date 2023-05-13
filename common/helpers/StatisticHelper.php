@@ -12,4 +12,17 @@ class StatisticHelper
         }
         return $colors;
     }
+
+    public static function getRandomColor()
+    {
+        return '#' . str_pad(dechex(mt_rand(0, 0xFFFFFF)), 6, '0', STR_PAD_LEFT);
+    }
+
+    public static function getColorsForGroupDirection($statistic, &$groupsStatistic)
+    {
+        foreach ($groupsStatistic as &$item) {
+            $key = array_search($item['direction'], array_column($statistic, 'id'));
+            $item['color'] = $statistic[$key]['color'];
+        }
+    }
 }

@@ -1,14 +1,19 @@
 <?php
 
+use dosamigos\chartjs\ChartJs;
 use yii\bootstrap4\Modal;
 use yii\bootstrap5\ActiveForm;
 use yii\grid\GridView;
+use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\widgets\Pjax;
 
 /** @var \frontend\models\DirectionForm $model */
 /** @var \yii\data\ActiveDataProvider $dataProvider */
 /** @var \frontend\models\DirectionForm $selectedDirection */
+/** @var \frontend\models\Group $years */
+/** @var array $statistic */
+/** @var array $groupsStatistic */
 
 $this->title = 'Направления';
 
@@ -28,25 +33,25 @@ $closeIcon = '<svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fil
         <div class="card card-outline card-primary">
             <div class="card-header">
                 <div class="card-title">
-                <?php
-                $form = ActiveForm::begin(['id' => 'direction-form']);
-                Modal::begin([
-                    'id' => 'direction-modal',
-                    'toggleButton' => ['label' => 'Добавить направление', 'class' => 'btn btn-primary'],
-                    'title' => 'Добавление направления',
-                    'footer' => Html::submitButton('Создать', ['class' => 'btn btn-success mg-right-61-p']) . Html::button('Закрыть', [
-                            'class' => 'btn btn-danger',
-                            'data-dismiss' => 'modal'
-                        ])
-                ]);
-                echo $this->render('_direction-form-modal', [
-                    'form' => $form,
-                    'model' => $model,
-                    'operation' => OPERATION_CREATE
-                ]);
-                Modal::end();
-                ActiveForm::end();
-                ?>
+                    <?php
+                    $form = ActiveForm::begin(['id' => 'direction-form']);
+                    Modal::begin([
+                        'id' => 'direction-modal',
+                        'toggleButton' => ['label' => 'Добавить направление', 'class' => 'btn btn-primary'],
+                        'title' => 'Добавление направления',
+                        'footer' => Html::submitButton('Создать', ['class' => 'btn btn-success mg-right-61-p']) . Html::button('Закрыть', [
+                                'class' => 'btn btn-danger',
+                                'data-dismiss' => 'modal'
+                            ])
+                    ]);
+                    echo $this->render('_direction-form-modal', [
+                        'form' => $form,
+                        'model' => $model,
+                        'operation' => OPERATION_CREATE
+                    ]);
+                    Modal::end();
+                    ActiveForm::end();
+                    ?>
                 </div>
                 <div class="card-tools">
                     <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i>
@@ -103,6 +108,73 @@ $closeIcon = '<svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fil
                 ]);
                 Pjax::end();
                 ?>
+            </div>
+        </div>
+        <div class="card card-outline card-secondary collapsed-card">
+            <div class="card-header">
+                <div class="card-title col-10">
+                    <div class="row">
+                        <div class="col-2">
+                            Групп на направлении
+                        </div>
+                        <?= Html::dropDownList('year-select', null, ArrayHelper::map($years, 'group_year', 'group_year'), [
+                            'class' => 'form-control col-2',
+                            'id' => 'year-stat-select'
+                        ]) ?>
+                    </div>
+                </div>
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-plus"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                <?php Pjax::begin(['id' => 'direction-stat-pjax']); ?>
+                <?= ChartJs::widget([
+                    'type' => 'doughnut',
+                    'data' => [
+                        'labels' => ArrayHelper::getColumn($statistic, 'name'),
+                        'datasets' => [
+                            [
+                                'data' => ArrayHelper::getColumn($statistic, 'count'),
+                                'label' => '',
+                                'backgroundColor' => ArrayHelper::getColumn($statistic, 'color'),
+                                'borderWidth' => 1,
+                            ]
+                        ]
+                    ]
+                ]) ?>
+                <?= ChartJs::widget([
+                    'type' => 'bar',
+                    'data' => [
+                        'labels' => ArrayHelper::getColumn($groupsStatistic, 'name'),
+                        'datasets' => [
+                            [
+                                'data' => ArrayHelper::getColumn($groupsStatistic, 'studentCount'),
+                                'label' => 'Кол-во студентов',
+                                'backgroundColor' => ArrayHelper::getColumn($groupsStatistic, 'color'),
+                                'borderColor' => array_fill(0, count($groupsStatistic), '#fff'),
+                                'borderWidth' => 1,
+                                'hoverBorderColor' => array_fill(0, count($groupsStatistic), "#999"),
+                            ]
+                        ]
+                    ],
+                    'clientOptions' => [
+                        'legend' => [
+                            'display' => false
+                        ],
+                        'scales' => [
+                            'yAxes' => [
+                                [
+                                    'ticks' => [
+                                        'min' => 0,
+                                    ]
+                                ]
+                            ]
+                        ],
+                    ]
+                ]) ?>
+                <?php Pjax::end(); ?>
             </div>
         </div>
     </div>
@@ -217,6 +289,13 @@ $this->registerJs(<<<JS
                 }
             });
         }
+    })
+JS
+);
+
+$this->registerJS(<<<JS
+    $(document).on('change', '#year-stat-select', function() {
+        $.pjax.reload({container: '#direction-stat-pjax', data: {DY: $('#year-stat-select').val()}, replace: false});
     })
 JS
 );
