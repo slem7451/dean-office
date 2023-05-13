@@ -4,6 +4,7 @@ namespace frontend\controllers;
 
 use common\helpers\TemplateHelper;
 use frontend\models\CertificateTemplate;
+use frontend\models\Decree;
 use frontend\models\DecreeTemplate;
 use frontend\models\TemplateForm;
 use Yii;
@@ -38,6 +39,10 @@ class TemplateController extends Controller
         $name = Yii::$app->request->get('TN');
         $id = Yii::$app->request->get('TI');
         $type = Yii::$app->request->get('TT');
+        $years = Decree::findYearsWithCertificates();
+        $year = Yii::$app->request->get('TYS') ?: date('Y');
+        $templateStatisticDecree = DecreeTemplate::getStatistic($year);
+        $templateStatisticCertificate = CertificateTemplate::getStatistic($year);
 
         $templates = DecreeTemplate::findAllTemplatesWithCertificatesAsArray($name, $id, $type);
         $dataProvider = new ArrayDataProvider([
@@ -101,7 +106,10 @@ class TemplateController extends Controller
             'model' => $model,
             'dataProvider' => $dataProvider,
             'selectedTemplate' => $selectedTemplate,
-            'templateExample' => $templateExample
+            'templateExample' => $templateExample,
+            'years' => $years,
+            'templateStatisticDecree' => $templateStatisticDecree,
+            'templateStatisticCertificate' => $templateStatisticCertificate
         ]);
     }
 }

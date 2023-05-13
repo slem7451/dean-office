@@ -83,4 +83,15 @@ class Decree extends ActiveRecord
     {
         return self::find()->select(["DATE_PART('year', created_at) as decree_year"])->groupBy(["DATE_PART('year', created_at)"])->all();
     }
+
+
+    public static function findYearsWithCertificates()
+    {
+        return self::find()
+            ->select(["DATE_PART('year', created_at) as decree_year"])
+            ->union(Certificate::find()->select(["DATE_PART('year', created_at) as decree_year"]))
+            ->groupBy(["DATE_PART('year', created_at)"])
+            ->orderBy(['decree_year' => SORT_DESC])
+            ->all();
+    }
 }

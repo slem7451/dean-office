@@ -1,9 +1,11 @@
 <?php
 
+use dosamigos\chartjs\ChartJs;
 use frontend\models\TemplateForm;
 use yii\bootstrap4\Modal;
 use yii\bootstrap5\ActiveForm;
 use yii\grid\GridView;
+use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\widgets\Pjax;
 
@@ -11,6 +13,9 @@ use yii\widgets\Pjax;
 /** @var \yii\data\ArrayDataProvider $dataProvider */
 /** @var \frontend\models\TemplateForm $selectedTemplate */
 /** @var string $templateExample */
+/** @var \frontend\models\Decree $years */
+/** @var array $templateStatisticDecree */
+/** @var array $templateStatisticCertificate */
 
 $this->title = 'Шаблоны';
 
@@ -35,60 +40,60 @@ $deleteIcon = '<svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fi
             <div class="card-header">
                 <div class="card-title col-10">
                     <div class="row">
-                            <?php
-                            $form = ActiveForm::begin(['id' => 'template-form']);
-                            Modal::begin([
-                                'id' => 'template-modal',
-                                'toggleButton' => ['label' => 'Создать шаблон', 'class' => 'btn btn-primary mg-right-20-px'],
-                                'size' => 'modal-lg',
-                                'title' => 'Создание шаблона <button class="question-btn" type="button" title="Инструкция" data-toggle="modal" data-target="#template-instruction-modal">' . $questionIcon . '</button>',
-                                'footer' => Html::submitButton('Создать', ['class' => 'btn btn-success mg-right-76-p']) . Html::button('Закрыть', [
-                                        'class' => 'btn btn-danger',
-                                        'data-dismiss' => 'modal'
-                                    ])
-                            ]);
-                            echo $this->render('_template-form-modal', [
-                                'model' => $model,
-                                'form' => $form,
-                                'operation' => OPERATION_CREATE,
-                                'templateExample' => $templateExample,
-                                'view' => false
-                            ]);
-                            Modal::end();
-                            ActiveForm::end();
-                            ?>
-                            <?php
-                            Modal::begin([
-                                'id' => 'template-instruction-modal',
-                                'toggleButton' => ['label' => 'Инструкция', 'class' => 'btn btn-primary mg-right-20-px'],
-                                'size' => 'modal-lg',
-                                'title' => 'Инструкция',
-                                'footer' => Html::button('Закрыть', [
+                        <?php
+                        $form = ActiveForm::begin(['id' => 'template-form']);
+                        Modal::begin([
+                            'id' => 'template-modal',
+                            'toggleButton' => ['label' => 'Создать шаблон', 'class' => 'btn btn-primary mg-right-20-px'],
+                            'size' => 'modal-lg',
+                            'title' => 'Создание шаблона <button class="question-btn" type="button" title="Инструкция" data-toggle="modal" data-target="#template-instruction-modal">' . $questionIcon . '</button>',
+                            'footer' => Html::submitButton('Создать', ['class' => 'btn btn-success mg-right-76-p']) . Html::button('Закрыть', [
                                     'class' => 'btn btn-danger',
                                     'data-dismiss' => 'modal'
                                 ])
-                            ]);
-                            echo $this->render('_instruction');
-                            Modal::end();
-                            echo Html::input('string', 'template-id', null, [
-                                'placeholder' => 'Номер',
-                                'class' => 'form-control col-2 mg-right-20-px',
-                                'id' => 'template-search-id'
-                            ]);
-                            echo Html::input('string', 'template-name', null, [
-                                'placeholder' => 'Название',
-                                'class' => 'form-control col-2 mg-right-20-px',
-                                'id' => 'template-search-name'
-                            ]);
-                            echo Html::dropDownList('type-select', null, [
-                                0 => 'Все шаблоны',
-                                TemplateForm::TYPE_DECREE => 'Приказ',
-                                TemplateForm::TYPE_CERTIFICATE => 'Справка'
-                            ], [
-                                'class' => 'form-control col-2',
-                                'id' => 'template-search-type'
-                            ]);
-                            ?>
+                        ]);
+                        echo $this->render('_template-form-modal', [
+                            'model' => $model,
+                            'form' => $form,
+                            'operation' => OPERATION_CREATE,
+                            'templateExample' => $templateExample,
+                            'view' => false
+                        ]);
+                        Modal::end();
+                        ActiveForm::end();
+                        ?>
+                        <?php
+                        Modal::begin([
+                            'id' => 'template-instruction-modal',
+                            'toggleButton' => ['label' => 'Инструкция', 'class' => 'btn btn-primary mg-right-20-px'],
+                            'size' => 'modal-lg',
+                            'title' => 'Инструкция',
+                            'footer' => Html::button('Закрыть', [
+                                'class' => 'btn btn-danger',
+                                'data-dismiss' => 'modal'
+                            ])
+                        ]);
+                        echo $this->render('_instruction');
+                        Modal::end();
+                        echo Html::input('string', 'template-id', null, [
+                            'placeholder' => 'Номер',
+                            'class' => 'form-control col-2 mg-right-20-px',
+                            'id' => 'template-search-id'
+                        ]);
+                        echo Html::input('string', 'template-name', null, [
+                            'placeholder' => 'Название',
+                            'class' => 'form-control col-2 mg-right-20-px',
+                            'id' => 'template-search-name'
+                        ]);
+                        echo Html::dropDownList('type-select', null, [
+                            0 => 'Все шаблоны',
+                            TemplateForm::TYPE_DECREE => 'Приказ',
+                            TemplateForm::TYPE_CERTIFICATE => 'Справка'
+                        ], [
+                            'class' => 'form-control col-2',
+                            'id' => 'template-search-type'
+                        ]);
+                        ?>
                     </div>
                 </div>
                 <div class="card-tools">
@@ -135,6 +140,107 @@ $deleteIcon = '<svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fi
                         ],
                     ]
                 ]); ?>
+                <?php Pjax::end(); ?>
+            </div>
+        </div>
+        <div class="card card-outline card-secondary collapsed-card">
+            <div class="card-header">
+                <div class="card-title col-10">
+                    <div class="row">
+                        <div class="col-2">
+                            Применение шаблонов
+                        </div>
+                        <?= Html::dropDownList('template-year', null, ArrayHelper::map($years, 'decree_year', 'decree_year'), [
+                            'class' => 'form-control col-2',
+                            'id' => 'template-year-select'
+                        ]) ?>
+                    </div>
+                </div>
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-plus"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                <?php Pjax::begin(['id' => 'template-year-pjax']); ?>
+                <?= ChartJs::widget([
+                    'type' => 'pie',
+                    'data' => [
+                        'labels' => ['Справки', 'Приказы'],
+                        'datasets' => [
+                            [
+                                'data' => [count($templateStatisticCertificate), count($templateStatisticDecree)],
+                                'label' => '',
+                                'backgroundColor' => ['#17a2b8', '#007bff'],
+                                'borderWidth' => 1,
+                            ]
+                        ]
+                    ]
+                ]) ?>
+                <div class="row mg-top-20px">
+                <div class="col-6">
+                <?= ChartJs::widget([
+                    'type' => 'bar',
+                    'data' => [
+                        'labels' => ArrayHelper::getColumn($templateStatisticDecree, 'name'),
+                        'datasets' => [
+                            [
+                                'data' => ArrayHelper::getColumn($templateStatisticDecree, 'studentCount'),
+                                'label' => 'Кол-во студентов',
+                                'backgroundColor' => array_fill(0, count($templateStatisticDecree), '#007bff'),
+                                'borderWidth' => 1,
+                            ]
+                        ]
+                    ],
+                    'clientOptions' => [
+                        'legend' => [
+                            'display' => false
+                        ],
+                        'scales' => [
+                            'yAxes' => [
+                                [
+                                    'ticks' => [
+                                        'min' => 0,
+                                        'precision' => 0
+                                    ]
+                                ]
+                            ]
+                        ],
+                    ]
+                ]) ?>
+                </div>
+                <div class="col-6">
+                <?= ChartJs::widget([
+                    'type' => 'bar',
+                    'data' => [
+                        'labels' => ArrayHelper::getColumn($templateStatisticCertificate, 'name'),
+                        'datasets' => [
+                            [
+                                'data' => ArrayHelper::getColumn($templateStatisticCertificate, 'studentCount'),
+                                'label' => 'Кол-во студентов',
+                                'backgroundColor' => array_fill(0, count($templateStatisticCertificate), '#17a2b8'),
+                                'borderWidth' => 1,
+                            ]
+                        ]
+                    ],
+                    'clientOptions' => [
+                        'legend' => [
+                            'display' => false
+                        ],
+                        'scales' => [
+                            'yAxes' => [
+                                [
+                                    'ticks' => [
+                                        'min' => 0,
+                                        'precision' => 0
+                                    ]
+                                ]
+                            ]
+                        ],
+                    ]
+                ]) ?>
+                </div>
+                </div>
                 <?php Pjax::end(); ?>
             </div>
         </div>
@@ -340,6 +446,13 @@ $this->registerJS(<<<JS
             TI: $('#template-search-id').val(),
             TT: $('#template-search-type').val()
             }, replace: false});
+    });
+JS
+);
+
+$this->registerJS(<<<JS
+    $(document).on('change', '#template-year-select', function() {
+        $.pjax.reload({container: '#template-year-pjax', data: {TYS: $('#template-year-select').val()}, replace: false});
     });
 JS
 );

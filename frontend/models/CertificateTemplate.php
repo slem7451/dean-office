@@ -38,4 +38,18 @@ class CertificateTemplate extends ActiveRecord
     {
         return self::find()->all();
     }
+
+    public static function getStatistic($year)
+    {
+        $statistic = [];
+        $certificates = Certificate::find()->where(["DATE_PART('year', created_at)" => $year])->all();
+        foreach ($certificates as $certificate) {
+            $studentCount = CertificateToStudent::find()->where(['certificate_id' => $certificate->id])->count();
+            $statistic[] = [
+                'name' => $certificate->template->name,
+                'studentCount' => $studentCount
+            ];
+        }
+        return $statistic;
+    }
 }

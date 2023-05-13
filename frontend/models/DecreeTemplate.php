@@ -11,7 +11,6 @@ use yii\db\ActiveRecord;
  * @property string $name
  * @property text $template
  */
-
 class DecreeTemplate extends ActiveRecord
 {
     public static function tableName()
@@ -89,5 +88,19 @@ class DecreeTemplate extends ActiveRecord
     public static function findAllDecrees()
     {
         return self::find()->all();
+    }
+
+    public static function getStatistic($year)
+    {
+        $statistic = [];
+        $decrees = Decree::find()->where(["DATE_PART('year', created_at)" => $year])->all();
+        foreach ($decrees as $decree) {
+            $studentCount = DecreeToStudent::find()->where(['decree_id' => $decree->id])->count();
+            $statistic[] = [
+                'name' => $decree->template->name,
+                'studentCount' => $studentCount
+            ];
+        }
+        return $statistic;
     }
 }

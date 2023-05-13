@@ -169,6 +169,7 @@ $this->title = Yii::$app->name;
                                 [
                                     'ticks' => [
                                         'min' => 0,
+                                        'precision' => 0
                                     ]
                                 ]
                             ]
