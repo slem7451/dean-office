@@ -43,7 +43,7 @@ class Student extends ActiveRecord
 
     public static function findAllStudentsForSearch()
     {
-        $students = self::find()->where(['is', 'closed_at', new Expression('null')])->all();
+        $students = self::find()->all();
         $result = [];
         foreach ($students as $student) {
             $result[] = ['value' => $student->id, 'label' => $student->second_name . ' ' . $student->first_name . ($student->patronymic ? ' ' . $student->patronymic : '') . ' (' . $student->id . ')'];
