@@ -133,7 +133,10 @@ class Student extends ActiveRecord
 
     public static function getStatistic()
     {
-        $closedStudents = Student::find()->where(["DATE_PART('year', closed_at)" => date('Y')])->count();
+        $closedStudents = Student::find()
+            ->where(["DATE_PART('year', closed_at)" => date('Y')])
+            ->andWhere(["DATE_PART('year', created_at)" => date('Y')])
+            ->count();
         $openedStudents = Student::find()
             ->where(["DATE_PART('year', created_at)" => date('Y')])
             ->andWhere(['is', 'closed_at', new Expression('null')])
